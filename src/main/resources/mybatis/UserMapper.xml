@@ -1,0 +1,15 @@
+<!-- backend/src/main/resources/mybatis/UserMapper.xml -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.food.mapper.UserMapper">
+
+    <select id="findByUsername" parameterType="String" resultType="com.food.dto.UserDTO">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+
+    <insert id="insertUser" parameterType="com.food.dto.UserDTO">
+        INSERT INTO user (id, password, name, phone)
+        VALUES (#{id}, #{password}, #{name}, #{phone})
+    </insert>
+</mapper>

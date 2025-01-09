@@ -1,0 +1,43 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.food.mapper.MenuMapper">
+    <select id="getMenuList" resultType="com.food.dto.MenuDTO">
+        SELECT * FROM menu
+    </select>
+
+     <select id="getGongsikdangMenu" resultType="com.food.dto.MenuDTO">
+        SELECT *
+        FROM menu
+        WHERE sector = 'A'
+    </select>
+    <select id="getGongsikdang_BMenu" resultType="com.food.dto.MenuDTO">
+        SELECT *
+        FROM menu
+        WHERE sector = 'B'
+    </select>
+    <select id="getGongsikdang_CMenu" resultType="com.food.dto.MenuDTO">
+        SELECT *
+        FROM menu
+        WHERE sector = 'C'
+    </select>
+    <select id="getGongsikdang_DMenu" resultType="com.food.dto.MenuDTO">
+        SELECT *
+        FROM menu
+        WHERE sector = 'D'
+    </select>
+
+    <!-- 매뉴 이름으로 조회 -->
+    <select id="getMenuByName" parameterType="string" resultType="com.food.dto.MenuDTO">
+        SELECT * FROM menu WHERE name = #{name}
+    </select>
+
+    <!-- 재고 감소 -->
+    <update id="reduceMenuQuantity">
+        UPDATE menu
+        SET number = number - #{quantity}
+        WHERE name = #{name} AND number >= #{quantity}
+    </update>
+
+
+</mapper>

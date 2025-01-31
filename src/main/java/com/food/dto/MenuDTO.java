@@ -8,10 +8,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class MenuDTO {
-    private String name;
-    private String sector;
+    private Integer foodId;
+    private String foodName;
     private String price;
     private String number;
-    private String restaurantName;
-    private String image;
+    private String sector;
+    private double avgStarRating;
 }

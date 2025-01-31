@@ -18,7 +18,7 @@ public class MenuService {
         return menuMapper.getMenuList();
     }
 
-    public List<MenuDTO> getGongsikdangMenu() { return menuMapper.getGongsikdangMenu(); }
+    public List<MenuDTO> getGongsikdang_AMenu() { return menuMapper.getGongsikdang_AMenu(); }
 
     public List<MenuDTO> getGongsikdang_BMenu() { return menuMapper.getGongsikdang_BMenu(); }
 
@@ -35,7 +35,4 @@ public class MenuService {
         }
         return false; // 재고가 부족하면 false 반환
     }
-
-
-
 }

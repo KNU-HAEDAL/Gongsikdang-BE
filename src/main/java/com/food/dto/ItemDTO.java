@@ -8,9 +8,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ItemDTO {
-    private Integer id; // Auto Increment된 고유 ID
-    private Integer purchaseId; // 연관된 Purchase ID
-    private String name; // 상품명
+    private Integer foodId; // 음식의 고유 ID
+    private String foodName; // 상품명
+    private Integer grade; // 평점
     private Integer quantity; // 구매 수량
     private Integer price; // 상품 가격
 }

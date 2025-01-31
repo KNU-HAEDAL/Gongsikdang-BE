@@ -25,46 +25,56 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    /**
+     * Spring Security 필터 체인 설정
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF 비활성화 (필요시 활성화 가능)
+                // CSRF 비활성화 (JWT를 사용할 경우 CSRF 방어는 필요 없음)
                 .csrf(csrf -> csrf.disable())
 
-                // 세션 사용하지 않음 (Stateless)
+                // 세션을 사용하지 않음 (JWT 기반 인증을 위해 Stateless 설정)
                 .sessionManagement(management ->
                         management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // 요청별 권한 설정
                 .authorizeHttpRequests(auth -> auth
+                        // 인증 없이 접근 가능한 경로 설정
                         .requestMatchers("/user/login",
                                 "/user/register",
                                 "/user/checkDuplicateId",
-                                "/swagger-ui/**",    // Swagger UI 경로 허용
-                                "/v3/api-docs/**"
-                        ).permitAll()  // Swagger API Docs 경로 허용).permitAll()
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**"
+                        ).permitAll()
+                        // 나머지 요청은 인증 필요
                         .anyRequest().authenticated()
                 )
-                // JWT 인증 필터 등록
+                // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // CORS 설정 적용
                 .cors(withDefaults());
 
         return http.build();
     }
 
+    /**
+     * CORS 설정
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOriginPattern("http://localhost:3000");
-        configuration.addAllowedOriginPattern("http://gongsikdang.s3-website.ap-northeast-2.amazonaws.com"); // S3 프론트엔드 URL
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
+    /**
+     * 비밀번호 암호화를 위한 BCryptPasswordEncoder 빈 등록
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

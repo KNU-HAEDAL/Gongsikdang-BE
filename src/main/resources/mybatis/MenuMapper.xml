@@ -6,7 +6,7 @@
         SELECT * FROM menu
     </select>
 
-     <select id="getGongsikdangMenu" resultType="com.food.dto.MenuDTO">
+     <select id="getGongsikdang_AMenu" resultType="com.food.dto.MenuDTO">
         SELECT *
         FROM menu
         WHERE sector = 'A'
@@ -38,6 +38,5 @@
         SET number = number - #{quantity}
         WHERE name = #{name} AND number >= #{quantity}
     </update>
-
 
 </mapper>

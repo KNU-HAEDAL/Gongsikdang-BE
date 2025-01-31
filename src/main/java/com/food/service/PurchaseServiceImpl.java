@@ -35,7 +35,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         // 구매 상품 저장
         for (ItemDTO item : purchaseDTO.getItems()) {
-            item.setPurchaseId(purchaseDTO.getId());
+            item.setFoodId(purchaseDTO.getFoodId()); // 수정: purchaseId 대신 foodId 사용
             purchaseMapper.insertItem(item);
         }
     }

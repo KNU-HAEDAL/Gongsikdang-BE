@@ -6,24 +6,24 @@
     <!-- 사용자 ID로 구매 내역 조회 -->
     <select id="findPurchasesByUserId" resultMap="purchaseResultMap">
         SELECT
-        p.id AS purchase_id,
-        p.merchantUid,
-        p.userId,
-        p.date,
-        p.totalAmount,
-        p.paymentMethod,
-        p.status,
-        i.name AS item_name,
-        i.quantity AS item_quantity,
-        i.price AS item_price
-        FROM purchases p
-        LEFT JOIN items i ON p.id = i.purchaseId
+            p.foodId AS purchase_foodId,
+            p.merchantUid,
+            p.userId,
+            p.date,
+            p.totalAmount,
+            p.paymentMethod,
+            p.status,
+            i.foodName AS item_foodName,
+            i.quantity AS item_quantity,
+            i.price AS item_price
+        FROM purchase p
+                 LEFT JOIN item i ON p.foodId = i.foodId
         WHERE p.userId = #{userId}
     </select>
 
     <!-- 구매 결과 매핑 -->
     <resultMap id="purchaseResultMap" type="com.food.dto.PurchaseDTO">
-        <id property="id" column="purchase_id"/>
+        <id property="foodId" column="purchase_foodId"/>
         <result property="merchantUid" column="merchantUid"/>
         <result property="userId" column="userId"/>
         <result property="date" column="date"/>
@@ -31,7 +31,7 @@
         <result property="paymentMethod" column="paymentMethod"/>
         <result property="status" column="status"/>
         <collection property="items" ofType="com.food.dto.ItemDTO">
-            <result property="name" column="item_name"/>
+            <result property="foodName" column="item_foodName"/>
             <result property="quantity" column="item_quantity"/>
             <result property="price" column="item_price"/>
         </collection>
@@ -39,15 +39,14 @@
 
     <!-- 구매 데이터 저장 -->
     <insert id="insertPurchase" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO purchases (merchantUid, userId, date, totalAmount, paymentMethod, status)
-        VALUES (#{purchase.merchantUid}, #{purchase.userId}, #{purchase.date}, #{purchase.totalAmount}, #{purchase.paymentMethod}, #{purchase.status})
+        INSERT INTO purchaseList (foodId, foodName, merchantUid, userId, date, totalAmount, paymentMethod, status)
+        VALUES (#{purchase.foodId}, #{purchase.foodName}, #{purchase.merchantUid}, #{purchase.userId}, #{purchase.date}, #{purchase.totalAmount}, #{purchase.paymentMethod}, #{purchase.status})
     </insert>
 
     <!-- 아이템 데이터 저장 -->
     <insert id="insertItem">
-        INSERT INTO items (name, quantity, price, purchaseId)
-        VALUES (#{item.name}, #{item.quantity}, #{item.price}, #{item.purchaseId})
+        INSERT INTO item (foodId, foodName, quantity, price)
+        VALUES (#{item.foodId}, #{item.foodName}, #{item.quantity}, #{item.price})
     </insert>
-
 
 </mapper>

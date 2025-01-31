@@ -1,6 +1,6 @@
 package com.food.controller;
 
-import com.food.dto.PointDTO;
+import com.food.dto.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class PointController {
 
     @Operation(summary = "포인트 충전", description = "사용자의 포인트를 충전합니다.")
     @PostMapping
-    public ResponseEntity<String> chargePoint(@RequestBody PointDTO pointDTO) {
+    public ResponseEntity<String> chargePoint(@RequestBody UserDTO userDTO) {
         // TODO: 포인트 충전 로직
         return ResponseEntity.ok("포인트 충전 성공");
     }

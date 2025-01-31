@@ -9,22 +9,19 @@ import java.util.Collection;
 @Setter
 @Builder
 @ToString
+@NoArgsConstructor
 public class UserDTO implements UserDetails {
     private String id;
     private String password;
     private String name;
-    private int phone;
+    private Integer point;
     private Collection<? extends GrantedAuthority> authorities;
 
-    // Constructor
-    public UserDTO() {
-    }
-
-    public UserDTO(String id, String password, String name, int phone, Collection<? extends GrantedAuthority> authorities) {
+    public UserDTO(String id, String password, String name, Integer point, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.password = password;
         this.name = name;
-        this.phone = phone;
+        this.point = point;
         this.authorities = authorities;
     }
 

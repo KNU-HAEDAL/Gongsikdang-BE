@@ -25,12 +25,12 @@ public class JwtUtil {
 
     /**
      * JWT 생성
-     * @param username 사용자 이름 (Payload의 Subject에 해당)
+     * @param userId 사용자 이름 (Payload의 Subject에 해당)
      * @return 생성된 JWT 토큰
      */
-    public String generateToken(String username) {
+    public String generateToken(String userId) {
         return Jwts.builder()
-                .setSubject(username) // 사용자 이름 설정
+                .setSubject(userId) // 사용자 id 설정
                 .setIssuedAt(new Date()) // 토큰 발행 시간
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10시간 유효
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256) // 서명 알고리즘과 Secret Key 사용
@@ -55,7 +55,7 @@ public class JwtUtil {
      * @param token JWT 토큰
      * @return 사용자 이름
      */
-    public String extractUsername(String token) {
+    public String extractUserId(String token) {
         return extractClaims(token).getSubject();
     }
 

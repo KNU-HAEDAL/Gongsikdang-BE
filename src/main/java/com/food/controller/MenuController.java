@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @Tag(name = "Menu API", description = "메뉴 관련 API")
-@RequestMapping("/menu")
+@RequestMapping("api/menu")
 public class MenuController {
 
     private final MenuService menuService;
@@ -71,7 +71,7 @@ public class MenuController {
             String userId = jwtUtil.extractClaims(userToken).getSubject(); // JWT에서 사용자 ID 추출
 
             if (userId == null || userId.isEmpty()) {
-                return ResponseEntity.status(401).body("Invalid Token");
+                return ResponseEntity.status(401).body("Can Not Find Token");
             }
 
             // 재고 감소 처리

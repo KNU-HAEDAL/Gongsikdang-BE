@@ -40,20 +40,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authorizationHeader = request.getHeader("Authorization");
         String jwt = null;
-        String username = null;
+        String userId = null;
 
         try {
             // Authorization 헤더에서 Bearer 토큰 추출
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7); // "Bearer " 이후의 토큰 값
-                username = jwtUtil.extractUsername(jwt); // 사용자 이름 추출
+                userId = jwtUtil.extractUserId(jwt); // 사용자 id 추출
             }
 
             // SecurityContext에 인증 정보가 없는 경우
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (!jwtUtil.isTokenExpired(jwt)) { // 토큰이 만료되지 않았을 경우
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            username, null, new ArrayList<>()); // 권한 정보는 빈 리스트로 설정
+                            userId, null, new ArrayList<>()); // 권한 정보는 빈 리스트로 설정
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication); // 인증 정보 설정
                 } else {

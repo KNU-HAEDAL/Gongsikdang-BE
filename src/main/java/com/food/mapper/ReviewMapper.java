@@ -12,4 +12,6 @@ public interface ReviewMapper {
     List<ReviewDTO> selectAllReviews(Integer foodId, String sort);
 
     void insertReview(@Param("review") ReviewDTO reviewDTO);
+
+    void updateFoodAvgStarRating(Integer foodId);
 }

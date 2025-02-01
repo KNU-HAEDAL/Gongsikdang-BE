@@ -4,6 +4,7 @@ import com.food.dto.ReviewDTO;
 import com.food.mapper.ReviewMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,8 +18,10 @@ public class ReviewService {
         return reviewMapper.selectAllReviews(foodId, sort);
     }
 
+    @Transactional // 트랜잭션 적용
     public void insertReview(ReviewDTO reviewDTO) {
         reviewMapper.insertReview(reviewDTO);
+        reviewMapper.updateFoodAvgStarRating(reviewDTO.getFoodId()); // 평균 별점 업데이트
     }
 
 }

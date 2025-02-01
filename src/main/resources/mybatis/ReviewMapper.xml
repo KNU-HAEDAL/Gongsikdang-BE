@@ -22,4 +22,12 @@
         INSERT INTO review (userId, foodId, reviewContent, grade, reviewDate)
         VALUES (#{review.userId}, #{review.foodId}, #{review.reviewContent}, #{review.grade}, NOW())
     </insert>
+
+    <update id="updateFoodAvgStarRating">
+        UPDATE menu
+        SET avgStarRating = (
+            SELECT COALESCE(AVG(grade), 0) FROM review WHERE foodId = #{foodId}
+        )
+        WHERE foodId = #{foodId};
+    </update>
 </mapper>

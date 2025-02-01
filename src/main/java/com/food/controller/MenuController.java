@@ -5,6 +5,7 @@ import com.food.service.MenuService;
 import com.food.config.jwt.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,11 @@ import java.util.Map;
 @RequestMapping("api/menu")
 public class MenuController {
 
-    private final MenuService menuService;
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private MenuService menuService;
 
-    public MenuController(MenuService menuService, JwtUtil jwtUtil) {
-        this.menuService = menuService;
-        this.jwtUtil = jwtUtil;
-    }
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Operation(summary = "모든 메뉴 조회", description = "모든 메뉴를 조회합니다.")
     @GetMapping
@@ -67,8 +66,7 @@ public class MenuController {
 
         try {
             // 토큰 검증 및 사용자 ID 추출
-            String userToken = token.substring(7); // "Bearer " 이후의 값 추출
-            String userId = jwtUtil.extractClaims(userToken).getSubject(); // JWT에서 사용자 ID 추출
+            String userId = jwtUtil.extractUserId(token); // JWT에서 사용자 ID 추출
 
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.status(401).body("Can Not Find Token");

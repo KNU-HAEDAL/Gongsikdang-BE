@@ -56,7 +56,8 @@ public class JwtUtil {
      * @return 사용자 이름
      */
     public String extractUserId(String token) {
-        return extractClaims(token).getSubject();
+        String userToken = token.substring(7); // "Bearer " 이후의 값 추출
+        return extractClaims(userToken).getSubject();
     }
 
     /**

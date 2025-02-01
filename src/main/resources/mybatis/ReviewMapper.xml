@@ -1,0 +1,25 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.food.mapper.ReviewMapper">
+    <select id="selectAllReviews" resultType="com.food.dto.ReviewDTO">
+        SELECT * FROM review
+        WHERE foodId = #{foodId}
+        <choose>
+            <when test="sort == 'asc'">
+                ORDER BY grade ASC
+            </when>
+            <when test="sort == 'desc'">
+                ORDER BY grade DESC
+            </when>
+            <otherwise>
+                ORDER BY grade DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insertReview">
+        INSERT INTO review (userId, foodId, reviewContent, grade, reviewDate)
+        VALUES (#{review.userId}, #{review.foodId}, #{review.reviewContent}, #{review.grade}, NOW())
+    </insert>
+</mapper>

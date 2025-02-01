@@ -9,10 +9,10 @@ import java.util.Date;
 @Setter
 @ToString
 public class ReviewDTO {
-    private int reviewId;
+    private Integer reviewId;
     private String userId;
-    private int foodId;
+    private Integer foodId;
     private String reviewContent;
-    private String grade;
+    private Integer grade;
     private Date reviewDate;
 }

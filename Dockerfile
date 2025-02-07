@@ -15,4 +15,4 @@ RUN ./mvnw clean package -DskipTests
 EXPOSE 8080
 
 # 6️⃣ 컨테이너 시작 시 실행할 명령어 (JAR 실행)
-CMD ["java", "-jar", "target/*.jar"]
+CMD ["java", "-jar", "target/gongsikdang_backend-0.0.1-SNAPSHOT.jar"]

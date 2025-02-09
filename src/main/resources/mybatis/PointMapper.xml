@@ -4,12 +4,12 @@
 <mapper namespace="com.food.mapper.PointMapper">
     <!-- 포인트 조회 -->
     <select id="getUserPoint" resultType="int">
-        SELECT point FROM user WHERE id = #{userId}
+        SELECT point FROM users WHERE id = #{userId}
     </select>
 
     <!-- 포인트 업데이트 -->
     <update id="updatePoint">
-        UPDATE user
+        UPDATE users
         SET point = point + #{point}
         WHERE id = #{userId}
     </update>

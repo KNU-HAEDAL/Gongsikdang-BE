@@ -5,11 +5,11 @@
 <mapper namespace="com.food.mapper.UserMapper">
 
     <select id="findByUsername" parameterType="String" resultType="com.food.dto.UserDTO">
-        SELECT * FROM user WHERE id = #{id}
+        SELECT * FROM users WHERE id = #{id}
     </select>
 
     <insert id="insertUser" parameterType="com.food.dto.UserDTO">
-        INSERT INTO user (id, password, name, point)
+        INSERT INTO users (id, password, name, point)
         VALUES (#{id}, #{password}, #{name}, #{point})
     </insert>
 </mapper>

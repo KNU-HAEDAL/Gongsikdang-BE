@@ -45,6 +45,8 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(withDefaults());
 
+        System.out.println("🔥 SecurityFilterChain 설정 완료!");
+
         return http.build();
     }
 

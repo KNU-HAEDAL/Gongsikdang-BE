@@ -47,6 +47,8 @@ public class UserController {
     public ResponseEntity<Map<String, String>> register(@RequestBody UserDTO userDTO) {
         Map<String, String> response = new HashMap<>();
 
+        System.out.println("🔥 회원가입 API 호출됨: " + userDTO);
+
         if (userService.registerUser(userDTO)) {
             response.put("message", "Registration successful");
             return ResponseEntity.ok(response);

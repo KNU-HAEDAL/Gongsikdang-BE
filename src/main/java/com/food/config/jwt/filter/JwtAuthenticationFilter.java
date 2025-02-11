@@ -29,10 +29,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * Swagger 경로를 필터링에서 제외
      */
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.equals("/user/register") || path.equals("/user/login") ||
-                path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui");
+        boolean shouldFilter = !(path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/user/register")
+                || path.startsWith("/user/login"));
+
+        System.out.println("🔥 JWT 필터 적용됨? " + shouldFilter + " (요청: " + path + ")");
+        return !shouldFilter;
     }
 
     @Override

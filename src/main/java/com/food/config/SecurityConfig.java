@@ -14,6 +14,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -66,10 +68,21 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        // ✅ 특정 출처 허용 (Swagger UI 및 프론트엔드 도메인 추가)
+        configuration.setAllowedOrigins(List.of(
+                "https://gongsikdang-be-production.up.railway.app",  // 현재 배포된 백엔드
+                "http://localhost:8080",  // 로컬 개발 환경
+                "http://gongsikdang.s3-website.ap-northeast-2.amazonaws.com/"  // 프론트엔드 배포 도메인 추가
+        ));
+
+        // ✅ 모든 헤더 허용
+        configuration.setAllowedHeaders(List.of("*"));
+
+        // ✅ 모든 HTTP 메서드 허용
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // ✅ 클라이언트에서 쿠키/인증 정보를 포함할 수 있도록 허용
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

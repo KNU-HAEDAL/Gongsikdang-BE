@@ -25,6 +25,7 @@ public class MenuController {
     private JwtUtil jwtUtil;
 
     @Operation(summary = "모든 메뉴 조회", description = "모든 메뉴를 조회합니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping
     public ResponseEntity<List<MenuDTO>> getMenu() {
         System.out.println("🔥 매뉴조회시작");
@@ -33,6 +34,7 @@ public class MenuController {
     }
 
     @Operation(summary = "공식당 메뉴 조회", description = "공식당 A, B, C, D 메뉴를 조회합니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping("/info/{type}")
     public ResponseEntity<List<MenuDTO>> getGongsikdangMenuByType(@PathVariable String type) {
         List<MenuDTO> menuList;

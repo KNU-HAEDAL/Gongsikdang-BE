@@ -70,6 +70,7 @@ public class PurchaseController {
      * 결제 취소 API (사용자가 직접 결제 취소)
      */
     @Operation(summary = "결제 취소", description = "사용자가 결제를 취소할 수 있습니다. -> 자동결제취소가 안될경우(네트워크 문제같은) 사용자가 직접 결제를 취소할 수 있어야 합니다")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/purchases/cancel")
     public ResponseEntity<?> cancelPayment(@RequestBody Map<String, String> requestBody) {
         String impUid = requestBody.get("imp_uid");

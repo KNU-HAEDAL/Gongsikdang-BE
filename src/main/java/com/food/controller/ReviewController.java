@@ -4,6 +4,7 @@ import com.food.dto.ReviewDTO;
 import com.food.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class ReviewController {
                     "- `sort=desc` (기본값) → 별점 높은 순\n" +
                     "- `sort=asc` → 별점 낮은 순"
     )
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping("/read/{foodId}")
     public ResponseEntity<List<ReviewDTO>> getReviews(
             @PathVariable Integer foodId,
@@ -40,6 +42,7 @@ public class ReviewController {
 
 
     @Operation(summary = "리뷰 작성", description = "특정 음식에 대한 리뷰를 작성합니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/write")
     public ResponseEntity<String> addReview( @RequestBody ReviewDTO reviewDTO) {
         System.out.println("🔥 리뷰작성시작");

@@ -13,7 +13,7 @@ public class OpenAPIConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                // 🔥 Bearer Authentication을 기본 적용하지 않도록 수정
                 .components(new Components()
                         .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)

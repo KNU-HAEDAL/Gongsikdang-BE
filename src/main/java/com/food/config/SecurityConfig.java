@@ -31,32 +31,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF 비활성화 (JWT를 사용할 경우 CSRF 방어는 필요 없음)
-                .csrf(csrf -> csrf.disable())
-
-                // 세션을 사용하지 않음 (JWT 기반 인증을 위해 Stateless 설정)
+                .csrf(csrf -> csrf.disable()) // ✅ CSRF 비활성화 (CORS 문제 방지)
                 .sessionManagement(management ->
                         management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // 요청별 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ 로그인 & 회원가입 API는 인증 없이 접근 가능
-                        .requestMatchers(HttpMethod.POST,"/user/login", "/user/register", "/user/checkDuplicateId").permitAll()
-
-                        // ✅ Swagger API 접근 허용
+                        // ✅ 인증 없이 허용할 API 설정 (명확히 POST 허용)
+                        .requestMatchers(HttpMethod.POST, "/user/register", "/user/login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-
-                        // ✅ OPTIONS 요청 허용 (CORS 설정 관련)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // 🔒 나머지 요청은 JWT 인증 필요
                         .anyRequest().authenticated()
                 )
-
-                // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
+                // 🔥 JWT 필터를 가장 마지막에 추가하도록 변경
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // CORS 설정 적용
                 .cors(withDefaults());
 
         return http.build();

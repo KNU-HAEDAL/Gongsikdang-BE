@@ -13,7 +13,7 @@
                 DESC
             </if>
             <if test="sort != 'asc' and sort != 'desc'">
-                DESC  <!-- 기본값 설정 -->
+                DESC
             </if>
         </trim>
     </select>

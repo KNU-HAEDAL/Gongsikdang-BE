@@ -2,12 +2,14 @@ package com.food.dto;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@Builder
 @ToString
 @NoArgsConstructor
 public class UserDTO implements UserDetails {
@@ -15,20 +17,12 @@ public class UserDTO implements UserDetails {
     private String password;
     private String name;
     private Integer point;
-    private Collection<? extends GrantedAuthority> authorities;
-
-    public UserDTO(String id, String password, String name, Integer point, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.password = password;
-        this.name = name;
-        this.point = point;
-        this.authorities = authorities;
-    }
+    private List<String> authorities;
 
     // UserDetails interface methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override

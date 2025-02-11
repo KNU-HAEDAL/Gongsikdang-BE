@@ -29,7 +29,7 @@ public class MenuService {
     public boolean reduceMenuQuantity(String name, int quantity) {
         MenuDTO menu = menuMapper.getMenuByName(name); // DB에서 직접 매뉴 조회
 
-        if (menu != null && Integer.parseInt(menu.getNumber()) >= quantity) {
+        if (menu != null && menu.getNumber() >= quantity) {
             menuMapper.reduceMenuQuantity(name, quantity); // 재고 감소 쿼리 실행
             return true;
         }

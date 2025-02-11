@@ -10,8 +10,8 @@ import lombok.ToString;
 public class MenuDTO {
     private Integer foodId;
     private String foodName;
-    private String price;
-    private String number;
+    private Integer price;
+    private Integer number;
     private String sector;
     private double avgStarRating;
 }

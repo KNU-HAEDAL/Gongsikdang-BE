@@ -24,7 +24,6 @@ public class OpenAPIConfig {
                                 + "4️⃣ 이후 인증이 필요한 API를 호출하면 자동으로 토큰이 포함됩니다.  \n\n"
                                 + "✅ 회원가입(`/user/register`)과 로그인(`/user/login`)은 인증 없이 사용 가능합니다.")
                 )
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components()
                         .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)

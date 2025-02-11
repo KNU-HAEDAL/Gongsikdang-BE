@@ -33,6 +33,7 @@ public class ReviewController {
             @Parameter(name = "sort", description = "정렬 방식 (asc: 별점 낮은 순, desc: 별점 높은 순)", example = "desc")
             @RequestParam(defaultValue = "desc") String sort
     ) {
+        System.out.println("🔥 리뷰조회시작");
         List<ReviewDTO> reviewDTOList = reviewService.getAllReviews(foodId, sort);
         return ResponseEntity.ok(reviewDTOList);
     }
@@ -41,6 +42,7 @@ public class ReviewController {
     @Operation(summary = "리뷰 작성", description = "특정 음식에 대한 리뷰를 작성합니다.")
     @PostMapping("/write")
     public ResponseEntity<String> addReview( @RequestBody ReviewDTO reviewDTO) {
+        System.out.println("🔥 리뷰작성시작");
         reviewService.insertReview(reviewDTO);
         return ResponseEntity.ok("리뷰 작성 성공");
     }

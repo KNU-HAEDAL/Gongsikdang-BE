@@ -27,6 +27,7 @@ public class MenuController {
     @Operation(summary = "모든 메뉴 조회", description = "모든 메뉴를 조회합니다.")
     @GetMapping
     public ResponseEntity<List<MenuDTO>> getMenu() {
+        System.out.println("🔥 매뉴조회시작");
         List<MenuDTO> menuList = menuService.getMenuList();
         return ResponseEntity.ok(menuList);
     }
@@ -35,6 +36,9 @@ public class MenuController {
     @GetMapping("/info/{type}")
     public ResponseEntity<List<MenuDTO>> getGongsikdangMenuByType(@PathVariable String type) {
         List<MenuDTO> menuList;
+
+        System.out.println("🔥 구역별 매뉴조회시작");
+
         switch (type.toLowerCase()) {
             case "a":
                 menuList = menuService.getGongsikdang_AMenu();

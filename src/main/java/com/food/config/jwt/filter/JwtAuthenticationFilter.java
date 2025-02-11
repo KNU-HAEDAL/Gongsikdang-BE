@@ -34,7 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         boolean shouldFilter = !(path.startsWith("/v3/api-docs")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/user/register")
-                || path.startsWith("/user/login"));
+                || path.startsWith("/user/login")
+                || path.startsWith("/user/checkDuplicateId"));
 
         System.out.println("🔥 JWT 필터 적용됨? " + shouldFilter + " (요청: " + path + ")");
         return !shouldFilter;

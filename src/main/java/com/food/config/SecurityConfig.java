@@ -36,7 +36,7 @@ public class SecurityConfig {
                         management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // ✅ 인증 없이 허용할 API 설정 (명확히 POST 허용)
-                        .requestMatchers(HttpMethod.POST, "/user/register", "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/register", "/user/login", "/user/checkDuplicateId").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()

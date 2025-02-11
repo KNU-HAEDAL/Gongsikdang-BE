@@ -31,9 +31,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .requiresChannel(channel ->
-                        channel.anyRequest().requiresSecure() // 모든 요청을 HTTPS로 강제
-                )
                 // CSRF 비활성화 (JWT를 사용할 경우 CSRF 방어는 필요 없음)
                 .csrf(csrf -> csrf.disable())
 

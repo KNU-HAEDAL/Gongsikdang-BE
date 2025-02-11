@@ -3,6 +3,7 @@ package com.food.controller;
 import com.food.config.jwt.token.JwtUtil;
 import com.food.service.PointService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class PointController {
      * 포인트 충전 API (포트원 결제 검증 포함)
      */
     @Operation(summary = "포인트 충전", description = "사용자의 포인트를 충전합니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping
     public ResponseEntity<String> chargePoint(
             @RequestHeader("Authorization") String token,
@@ -46,6 +48,7 @@ public class PointController {
      * 포인트 조회 API
      */
     @Operation(summary = "포인트 조회", description = "사용자의 포인트를 조회합니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping
     public ResponseEntity<Integer> getPoint(@RequestHeader("Authorization") String token) {
         try {

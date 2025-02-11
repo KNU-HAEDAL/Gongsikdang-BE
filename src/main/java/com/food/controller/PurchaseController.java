@@ -4,6 +4,7 @@ import com.food.dto.PurchaseDTO;
 import com.food.service.PaymentService;
 import com.food.service.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class PurchaseController {
      * JWT 기반 구매 내역 조회 API
      */
     @Operation(summary = "구매 전체 내역 조회", description = "사용자의 JWT 토큰을 기반으로 구매 내역을 조회합니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping("/purchases")
     public ResponseEntity<?> getPurchases(@RequestHeader("Authorization") String token) {
         if (token == null || !token.startsWith("Bearer ")) {
@@ -47,6 +49,7 @@ public class PurchaseController {
      * 결제 검증 및 구매 데이터 저장 API
      */
     @Operation(summary = "구매 데이터 저장", description = "JWT 토큰과 결제 정보를 기반으로 결제 검증 후 구매 데이터를 저장합니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/purchases")
     public ResponseEntity<?> savePurchase(@RequestBody PurchaseDTO purchaseDTO, @RequestHeader("Authorization") String token) {
         if (token == null || !token.startsWith("Bearer ")) {

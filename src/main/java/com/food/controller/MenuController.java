@@ -4,6 +4,7 @@ import com.food.dto.MenuDTO;
 import com.food.service.MenuService;
 import com.food.config.jwt.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +56,7 @@ public class MenuController {
     }
 
     @Operation(summary = "메뉴 재고 감소", description = "JWT 토큰을 검증하고 사용자가 요청한 메뉴의 재고를 감소시킵니다.")
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/reduce")
     public ResponseEntity<String> reduceMenuQuantity(
             @RequestHeader("Authorization") String token,

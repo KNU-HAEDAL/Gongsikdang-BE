@@ -37,7 +37,7 @@ public class UserService {
         // 비밀번호 암호화 후 저장
         String encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
         userDTO.setPassword(encryptedPassword);
-
+        System.out.println("🔥 회원 등록시도");
         userMapper.insertUser(userDTO);
         return true;
     }

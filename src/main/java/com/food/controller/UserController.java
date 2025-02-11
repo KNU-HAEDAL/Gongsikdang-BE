@@ -51,11 +51,11 @@ public class UserController {
 
         if (userService.registerUser(userDTO)) {
             response.put("message", "Registration successful");
-            System.out.println("✅ 회원가입 성공!");
+            System.out.println("🔥 회원가입 성공!");
             return ResponseEntity.ok(response);
         } else {
             response.put("message", "Registration failed. User may already exist.");
-            System.out.println("❌ 회원가입 실패! 예외 발생");
+            System.out.println("🔥 회원가입 실패! 예외 발생 아마 db");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

@@ -26,9 +26,6 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    /**
-     * Spring Security 필터 체인 설정
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -41,21 +38,22 @@ public class SecurityConfig {
 
                 // 요청별 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // 인증 없이 접근 가능한 경로 설정
-                        .requestMatchers("/user/login",
-                                "/user/register",
-                                "/user/checkDuplicateId",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/api/review/**"
+                        // ✅ 로그인 & 회원가입 API는 인증 없이 접근 가능
+                        .requestMatchers("/user/login", "/user/register", "/user/checkDuplicateId").permitAll()
 
-                        ).permitAll()
+                        // ✅ Swagger API 접근 허용
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+
+                        // ✅ OPTIONS 요청 허용 (CORS 설정 관련)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // 나머지 요청은 인증 필요
+
+                        // 🔒 나머지 요청은 JWT 인증 필요
                         .anyRequest().authenticated()
                 )
+
                 // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
                 // CORS 설정 적용
                 .cors(withDefaults());
 
@@ -76,6 +74,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     /**
      * 비밀번호 암호화를 위한 BCryptPasswordEncoder 빈 등록
      */
@@ -84,10 +83,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
-
-
-
-
-
-

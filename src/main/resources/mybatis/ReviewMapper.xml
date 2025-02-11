@@ -5,17 +5,17 @@
     <select id="selectAllReviews" resultType="com.food.dto.ReviewDTO">
         SELECT * FROM review
         WHERE foodId = #{foodId}
-        <choose>
-            <when test="sort == 'asc'">
-                ORDER BY grade ASC
-            </when>
-            <when test="sort == 'desc'">
-                ORDER BY grade DESC
-            </when>
-            <otherwise>
-                ORDER BY grade DESC
-            </otherwise>
-        </choose>
+        <trim prefix="ORDER BY grade" prefixOverrides=",">
+            <if test="sort eq 'asc'">
+                ASC
+            </if>
+            <if test="sort eq 'desc'">
+                DESC
+            </if>
+            <if test="sort != 'asc' and sort != 'desc'">
+                DESC  <!-- 기본값 설정 -->
+            </if>
+        </trim>
     </select>
 
     <insert id="insertReview">

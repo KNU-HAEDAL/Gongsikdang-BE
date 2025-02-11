@@ -41,7 +41,7 @@ public class SecurityConfig {
                 // 요청별 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         // ✅ 로그인 & 회원가입 API는 인증 없이 접근 가능
-                        .requestMatchers("/user/login", "/user/register", "/user/checkDuplicateId").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/user/login", "/user/register", "/user/checkDuplicateId").permitAll()
 
                         // ✅ Swagger API 접근 허용
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()

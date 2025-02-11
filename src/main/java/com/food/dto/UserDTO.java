@@ -12,17 +12,16 @@ import java.util.stream.Collectors;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO implements UserDetails {
     private String id;
     private String password;
     private String name;
     private Integer point;
-    private List<String> authorities;
 
-    // UserDetails interface methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return List.of();
     }
 
     @Override

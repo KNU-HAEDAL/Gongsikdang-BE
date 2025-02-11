@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface ReviewMapper {
 
-    List<ReviewDTO> selectAllReviews(Integer foodId, String sort);
+    List<ReviewDTO> selectAllReviews(@Param("foodId") Integer foodId, @Param("sort") String sort);
 
     void insertReview(@Param("review") ReviewDTO reviewDTO);
 

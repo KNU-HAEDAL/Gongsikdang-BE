@@ -56,6 +56,4 @@ public class PointController {
             return ResponseEntity.status(401).body(-1); // 오류 시 -1 반환
         }
     }
-
-
 }

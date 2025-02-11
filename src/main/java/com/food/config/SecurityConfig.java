@@ -31,6 +31,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .requiresChannel(channel ->
+                        channel.anyRequest().requiresSecure() // 모든 요청을 HTTPS로 강제
+                )
                 // CSRF 비활성화 (JWT를 사용할 경우 CSRF 방어는 필요 없음)
                 .csrf(csrf -> csrf.disable())
 
@@ -68,21 +71,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // ✅ 특정 출처 허용 (Swagger UI 및 프론트엔드 도메인 추가)
-        configuration.setAllowedOrigins(List.of(
-                "https://gongsikdang-be-production.up.railway.app",  // 현재 배포된 백엔드
-                "http://localhost:8080",  // 로컬 개발 환경
-                "http://gongsikdang.s3-website.ap-northeast-2.amazonaws.com/"  // 프론트엔드 배포 도메인 추가
-        ));
 
-        // ✅ 모든 헤더 허용
-        configuration.setAllowedHeaders(List.of("*"));
-
-        // ✅ 모든 HTTP 메서드 허용
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
         // ✅ 클라이언트에서 쿠키/인증 정보를 포함할 수 있도록 허용
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -1,9 +1,12 @@
 package com.food.controller;
 
+import com.food.config.jwt.token.JwtUtil;
 import com.food.dto.ReviewDTO;
 import com.food.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/review")
@@ -20,6 +24,8 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Operation(
             summary = "리뷰 조회",
@@ -41,12 +47,46 @@ public class ReviewController {
     }
 
 
-    @Operation(summary = "리뷰 작성", description = "특정 음식에 대한 리뷰를 작성합니다.")
+    @Operation(
+            summary = "리뷰 작성",
+            description = "특정 음식에 대한 리뷰를 작성합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "리뷰 작성 요청 예시",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    example = "{ \"foodId\": 1, \"reviewContent\": \"정말 맛있어요!\", \"grade\": 5 }"
+                            )
+                    )
+            )
+    )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
-    @PostMapping("/write")
-    public ResponseEntity<String> addReview( @RequestBody ReviewDTO reviewDTO) {
-        System.out.println("🔥 리뷰작성시작");
+    @PostMapping("/api/review/write")
+    public ResponseEntity<String> addReview(
+            @RequestHeader("Authorization") String token,
+            @RequestBody Map<String, Object> requestBody
+    ) {
+        System.out.println("🔥 리뷰 작성 시작");
+
+        // 토큰에서 사용자 ID 추출
+        String userId = jwtUtil.extractUserId(token);
+
+        // Request Body에서 값 추출
+        int foodId = (int) requestBody.get("foodId");
+        String reviewContent = (String) requestBody.get("reviewContent");
+        int grade = (int) requestBody.get("grade");
+
+        // ReviewDTO에 값 설정
+        ReviewDTO reviewDTO = new ReviewDTO();
+        reviewDTO.setUserId(userId); // JWT에서 추출한 userId 설정
+        reviewDTO.setFoodId(foodId);
+        reviewDTO.setReviewContent(reviewContent);
+        reviewDTO.setGrade(grade);
+
+        // 리뷰 저장 로직 호출
         reviewService.insertReview(reviewDTO);
+
+        // 성공 응답 반환
         return ResponseEntity.ok("리뷰 작성 성공");
     }
 }

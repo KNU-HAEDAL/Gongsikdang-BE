@@ -4,6 +4,8 @@ import com.food.config.jwt.token.JwtUtil;
 import com.food.dto.UserDTO;
 import com.food.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,17 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    @Operation(summary = "로그인", description = "유저 로그인 API. ID와 비밀번호를 통해 로그인합니다.")
+    @Operation(
+            summary = "로그인",
+            description = "유저 로그인 API. ID와 비밀번호를 통해 로그인합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "예시",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(example = "{ \"id\": hello, \"password\": \"1234\" }")
+                    )
+            )
+    )
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) {
         Map<String, String> response = new HashMap<>();
@@ -42,7 +54,17 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "회원가입", description = "유저 회원가입 API. ID와 비밀번호, 기타 정보를 통해 회원가입합니다.")
+    @Operation(
+            summary = "회원가입",
+            description = "유저 회원가입 API. ID와 비밀번호, 기타 정보를 통해 회원가입합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "예시",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(example = "{ \"id\": hello, \"password\": \"1234\", \"name\": \"안뇽\" }")
+                    )
+            )
+    )
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody UserDTO userDTO) {
         Map<String, String> response = new HashMap<>();
@@ -60,7 +82,17 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "ID 중복 확인", description = "회원가입 시 ID의 중복 여부를 확인합니다.")
+    @Operation(
+            summary = "ID 중복 확인",
+            description = "회원가입 시 ID의 중복 여부를 확인합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "예시",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(example = "{ \"id\": \"hello\"}")
+                    )
+            )
+    )
     @PostMapping("/checkDuplicateId")
     public ResponseEntity<Map<String, Boolean>> checkDuplicateId(@RequestBody Map<String, String> request) {
         String id = request.get("id");

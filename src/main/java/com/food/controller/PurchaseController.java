@@ -48,7 +48,7 @@ public class PurchaseController {
     /**
      * 결제 검증 및 구매 데이터 저장 API
      */
-    @Operation(summary = "구매 데이터 저장", description = "JWT 토큰과 결제 정보를 기반으로 결제 검증 후 구매 데이터를 저장합니다.")
+    @Operation(summary = "결제 검증 및 구매데이터 저장", description = "JWT 토큰과 결제 정보를 기반으로 결제 검증 후 구매 데이터를 저장합니다.")
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/purchases")
     public ResponseEntity<?> savePurchase(@RequestBody PurchaseDTO purchaseDTO, @RequestHeader("Authorization") String token) {

@@ -3,6 +3,10 @@ package com.food.controller;
 import com.food.config.jwt.token.JwtUtil;
 import com.food.service.PointService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,17 @@ public class PointController {
     /**
      * 포인트 충전 API (포트원 결제 검증 포함)
      */
-    @Operation(summary = "포인트 충전", description = "사용자의 포인트를 충전합니다.")
+    @Operation(
+            summary = "포인트 충전",
+            description = "사용자의 포인트를 충전합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "포인트 충전 요청 예시",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(example = "{ \"money\": 10000, \"imp_uid\": \"imp_1234567890\" }")
+                    )
+            )
+    )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping
     public ResponseEntity<String> chargePoint(
@@ -47,7 +61,19 @@ public class PointController {
     /**
      * 포인트 조회 API
      */
-    @Operation(summary = "포인트 조회", description = "사용자의 포인트를 조회합니다.")
+    @Operation(
+            summary = "포인트 조회",
+            description = "사용자의 포인트를 조회합니다.",
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "Bearer 토큰 (예: Bearer xxxxxx.yyyyyy.zzzzzz)",
+                            required = true,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(type = "string", example = "Bearer xxxxxx.yyyyyy.zzzzzz")
+                    )
+            }
+    )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping
     public ResponseEntity<Integer> getPoint(@RequestHeader("Authorization") String token) {

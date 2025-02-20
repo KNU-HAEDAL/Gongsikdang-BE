@@ -35,7 +35,7 @@ public class UserController {
                     description = "예시",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{ \"id\": hello, \"password\": \"1234\" }")
+                            schema = @Schema(example = "{ \"id\": \"hello\", \"password\": \"1234\" }")
                     )
             )
     )
@@ -61,7 +61,7 @@ public class UserController {
                     description = "예시",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{ \"id\": hello, \"password\": \"1234\", \"name\": \"안뇽\" }")
+                            schema = @Schema(example = "{ \"id\": \"hello\", \"password\": \"1234\", \"name\": \"안뇽\" }")
                     )
             )
     )

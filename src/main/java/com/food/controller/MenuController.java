@@ -4,6 +4,10 @@ import com.food.dto.MenuDTO;
 import com.food.service.MenuService;
 import com.food.config.jwt.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +65,31 @@ public class MenuController {
         return ResponseEntity.ok(menuList);
     }
 
-    @Operation(summary = "메뉴 재고 감소", description = "JWT 토큰을 검증하고 사용자가 요청한 메뉴의 재고를 감소시킵니다.")
+    /**
+     * 메뉴 재고 감소 API
+     */
+    @Operation(
+            summary = "메뉴 재고 감소",
+            description = "JWT 토큰을 검증하고 사용자가 요청한 메뉴의 재고를 감소시킵니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "장바구니에 담긴 메뉴 목록과 수량 정보",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    example = "[ { \"name\": \"돈까스\", \"quantity\": 2 }, { \"name\": \"떡볶이\", \"quantity\": 1 } ]"
+                            )
+                    )
+            ),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "Bearer 토큰 (예: Bearer xxxxxx.yyyyyy.zzzzzz)",
+                            required = true,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(type = "string", example = "Bearer xxxxxx.yyyyyy.zzzzzz")
+                    )
+            }
+    )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/reduce")
     public ResponseEntity<String> reduceMenuQuantity(

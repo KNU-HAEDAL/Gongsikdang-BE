@@ -51,7 +51,10 @@ public class PurchaseController {
             summary = "결제 검증 및 구매데이터 저장",
             description = "JWT 토큰과 결제 정보를 기반으로 결제 검증 후 구매 데이터를 저장합니다.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "merchantUid : 고유 주문번호. 각 결제마다 달라야 합니다. (mid_ + 타임스탬프)",
+                    description = "merchantUid : 고유 주문번호. 각 결제마다 달라야 합니다. (mid_ + 타임스탬프)\n" +
+                                  "**포트원(아임포트)**의 **IMP.request_pay()**는 JavaScript SDK입니다.\n" +
+                                  "Swagger UI는 HTTP 요청만 보낼 수 있으며, JavaScript 실행 환경이 아님.\n" +
+                                  "따라서, Swagger에서는 결제창 호출이 불가능합니다.",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",

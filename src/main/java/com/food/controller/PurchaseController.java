@@ -51,26 +51,32 @@ public class PurchaseController {
             summary = "결제 검증 및 구매데이터 저장",
             description = "JWT 토큰과 결제 정보를 기반으로 결제 검증 후 구매 데이터를 저장합니다.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "구매 데이터 요청 예시",
+                    description = "merchantUid : 고유 주문번호. 각 결제마다 달라야 합니다. (mid_ + 타임스탬프)",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(
                                     example = "{\n" +
-                                            "  \"merchantUid\": \"order_1234567890\",\n" +
-                                            "  \"totalAmount\": 10000,\n" +
-                                            "  \"items\": [\n" +
+                                            "  \"merchantUid\": \"mid_1234567890\",\n" +
+                                            "  \"date\": \"2025-02-24T12:34:56.789Z\",\n" +
+                                            "  \"totalAmount\": 20000,\n" +
+                                            "  \"paymentMethod\": \"pay\",\n" +
+                                            "  \"pgProvider\": \"kakao\",\n" +
+                                            "  \"item\": [\n" +
                                             "    {\n" +
-                                            "      \"name\": \"상품1\",\n" +
+                                            "      \"foodId\": 1\",\n" +
+                                            "      \"foodName\": \"돈까스\",\n" +
                                             "      \"quantity\": 2,\n" +
-                                            "      \"price\": 5000\n" +
+                                            "      \"price\": 6000\n" +
                                             "    },\n" +
                                             "    {\n" +
-                                            "      \"name\": \"상품2\",\n" +
+                                            "      \"foodId\": 2\",\n" +
+                                            "      \"foodName\": \"떡볶이\",\n" +
                                             "      \"quantity\": 1,\n" +
-                                            "      \"price\": 10000\n" +
+                                            "      \"price\": 5500\n" +
                                             "    }\n" +
-                                            "  ]\n" +
+                                            "  ],\n" +
+                                            "  \"status\": \"SUCCESS\"\n" +
                                             "}"
                             )
                     )
@@ -87,8 +93,12 @@ public class PurchaseController {
             // 🔥 `merchant_uid`로 `imp_uid` 조회 (프론트는 `imp_uid`를 모름)
             String impUid = paymentService.getImpUidByMerchantUid(purchaseDTO.getMerchantUid());
 
+            System.out.println("impUid조회성공");
+
             // 🔒 구매 내역 저장 (impUid 검증 및 트랜잭션 처리)
             purchaseService.savePurchase(purchaseDTO, userId, impUid);
+
+            System.out.println("구매내역저장성공");
 
             return ResponseEntity.status(HttpStatus.CREATED).body("결제 검증 완료 및 구매 데이터 저장 성공");
         } catch (RuntimeException e) {

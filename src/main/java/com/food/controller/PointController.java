@@ -48,6 +48,8 @@ public class PointController {
             // 🔥 `merchant_uid`로 `imp_uid` 조회 (프론트는 `imp_uid`를 모름)
             String impUid = paymentService.getImpUidByMerchantUid(merchantUid);
 
+            System.out.println("impUid조회성공");
+
             // 🔒 포인트 저장 (impUid 검증 및 트랜잭션 처리)
             pointService.savePoint(userId, money, impUid);
             return ResponseEntity.ok("포인트 충전 완료");

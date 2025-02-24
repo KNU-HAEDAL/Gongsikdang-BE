@@ -64,13 +64,13 @@ public class PurchaseController {
                                             "  \"pgProvider\": \"kakao\",\n" +
                                             "  \"item\": [\n" +
                                             "    {\n" +
-                                            "      \"foodId\": 1\",\n" +
+                                            "      \"foodId\": 1,\",\n" +
                                             "      \"foodName\": \"돈까스\",\n" +
                                             "      \"quantity\": 2,\n" +
                                             "      \"price\": 6000\n" +
                                             "    },\n" +
                                             "    {\n" +
-                                            "      \"foodId\": 2\",\n" +
+                                            "      \"foodId\": 2,\",\n" +
                                             "      \"foodName\": \"떡볶이\",\n" +
                                             "      \"quantity\": 1,\n" +
                                             "      \"price\": 5500\n" +

@@ -4,11 +4,15 @@ import com.food.dto.PurchaseDTO;
 import com.food.service.PaymentService;
 import com.food.service.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,13 +34,8 @@ public class PurchaseController {
     @Operation(summary = "구매 전체 내역 조회", description = "사용자의 JWT 토큰을 기반으로 구매 내역을 조회합니다.")
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping("/purchases")
-    public ResponseEntity<?> getPurchases(@RequestHeader("Authorization") String token) {
-        if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
-        }
-
-        String userToken = token.substring(7);
-        List<PurchaseDTO> purchases = purchaseService.getPurchasesByToken(userToken);
+    public ResponseEntity<?> getPurchases(@AuthenticationPrincipal String userId) {
+        List<PurchaseDTO> purchases = purchaseService.getPurchasesByUserId(userId);
 
         if (purchases.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("구매 내역이 없습니다.");
@@ -48,18 +47,49 @@ public class PurchaseController {
     /**
      * 결제 검증 및 구매 데이터 저장 API
      */
-    @Operation(summary = "결제 검증 및 구매데이터 저장", description = "JWT 토큰과 결제 정보를 기반으로 결제 검증 후 구매 데이터를 저장합니다.")
+    @Operation(
+            summary = "결제 검증 및 구매데이터 저장",
+            description = "JWT 토큰과 결제 정보를 기반으로 결제 검증 후 구매 데이터를 저장합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "구매 데이터 요청 예시",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    example = "{\n" +
+                                            "  \"merchantUid\": \"order_1234567890\",\n" +
+                                            "  \"totalAmount\": 10000,\n" +
+                                            "  \"items\": [\n" +
+                                            "    {\n" +
+                                            "      \"name\": \"상품1\",\n" +
+                                            "      \"quantity\": 2,\n" +
+                                            "      \"price\": 5000\n" +
+                                            "    },\n" +
+                                            "    {\n" +
+                                            "      \"name\": \"상품2\",\n" +
+                                            "      \"quantity\": 1,\n" +
+                                            "      \"price\": 10000\n" +
+                                            "    }\n" +
+                                            "  ]\n" +
+                                            "}"
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "결제 검증 완료 및 구매 데이터 저장 성공"),
+                    @ApiResponse(responseCode = "400", description = "결제 검증 실패 또는 요청 데이터 오류")
+            }
+    )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/purchases")
-    public ResponseEntity<?> savePurchase(@RequestBody PurchaseDTO purchaseDTO, @RequestHeader("Authorization") String token) {
-        if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
-        }
-
-        String userToken = token.substring(7);
-
+    public ResponseEntity<?> savePurchase(@AuthenticationPrincipal String userId, @RequestBody PurchaseDTO purchaseDTO) {
         try {
-            purchaseService.savePurchase(purchaseDTO, userToken);
+            // 🔥 `merchant_uid`로 `imp_uid` 조회 (프론트는 `imp_uid`를 모름)
+            String impUid = paymentService.getImpUidByMerchantUid(purchaseDTO.getMerchantUid());
+
+            // 🔒 구매 내역 저장 (impUid 검증 및 트랜잭션 처리)
+            purchaseService.savePurchase(purchaseDTO, userId, impUid);
+
             return ResponseEntity.status(HttpStatus.CREATED).body("결제 검증 완료 및 구매 데이터 저장 성공");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

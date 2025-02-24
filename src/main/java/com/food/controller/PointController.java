@@ -1,6 +1,7 @@
 package com.food.controller;
 
 import com.food.config.jwt.token.JwtUtil;
+import com.food.service.PaymentService;
 import com.food.service.PointService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -21,36 +23,32 @@ import java.util.Map;
 public class PointController {
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private PointService pointService;
 
     @Autowired
-    private PointService pointService;
+    private PaymentService paymentService;
 
     /**
      * 포인트 충전 API (포트원 결제 검증 포함)
      */
     @Operation(
             summary = "포인트 충전",
-            description = "사용자의 포인트를 충전합니다.",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "포인트 충전 요청 예시",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{ \"money\": 10000, \"imp_uid\": \"imp_1234567890\" }")
-                    )
-            )
+            description = "사용자의 포인트를 충전합니다.(포인트 검증 및 저장)"
     )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping
     public ResponseEntity<String> chargePoint(
-            @RequestHeader("Authorization") String token,
+            @AuthenticationPrincipal String userId,
             @RequestBody Map<String, Object> requestBody
     ) {
         try {
-            String userId = jwtUtil.extractUserId(token);
             int money = (int) requestBody.get("money");
-            String impUid = (String) requestBody.get("imp_uid");
+            String merchantUid = (String) requestBody.get("merchant_uid"); // 주문 번호
 
+            // 🔥 `merchant_uid`로 `imp_uid` 조회 (프론트는 `imp_uid`를 모름)
+            String impUid = paymentService.getImpUidByMerchantUid(merchantUid);
+
+            // 🔒 포인트 저장 (impUid 검증 및 트랜잭션 처리)
             pointService.savePoint(userId, money, impUid);
             return ResponseEntity.ok("포인트 충전 완료");
         } catch (Exception e) {
@@ -63,22 +61,12 @@ public class PointController {
      */
     @Operation(
             summary = "포인트 조회",
-            description = "사용자의 포인트를 조회합니다.",
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "Bearer 토큰 (예: Bearer xxxxxx.yyyyyy.zzzzzz)",
-                            required = true,
-                            in = ParameterIn.HEADER,
-                            schema = @Schema(type = "string", example = "Bearer xxxxxx.yyyyyy.zzzzzz")
-                    )
-            }
+            description = "사용자의 포인트를 조회합니다."
     )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping
-    public ResponseEntity<Integer> getPoint(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Integer> getPoint(@AuthenticationPrincipal String userId) {
         try {
-            String userId = jwtUtil.extractUserId(token);
             int point = pointService.getUserPoint(userId);
             return ResponseEntity.ok(point);
         } catch (Exception e) {

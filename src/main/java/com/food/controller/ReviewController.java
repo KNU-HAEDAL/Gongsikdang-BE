@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,8 +25,6 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @Operation(
             summary = "리뷰 조회",
@@ -63,13 +62,10 @@ public class ReviewController {
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/api/review/write")
     public ResponseEntity<String> addReview(
-            @RequestHeader("Authorization") String token,
+            @AuthenticationPrincipal String userId,
             @RequestBody Map<String, Object> requestBody
     ) {
         System.out.println("🔥 리뷰 작성 시작");
-
-        // 토큰에서 사용자 ID 추출
-        String userId = jwtUtil.extractUserId(token);
 
         // Request Body에서 값 추출
         int foodId = (int) requestBody.get("foodId");
@@ -78,7 +74,7 @@ public class ReviewController {
 
         // ReviewDTO에 값 설정
         ReviewDTO reviewDTO = new ReviewDTO();
-        reviewDTO.setUserId(userId); // JWT에서 추출한 userId 설정
+        reviewDTO.setUserId(userId);
         reviewDTO.setFoodId(foodId);
         reviewDTO.setReviewContent(reviewContent);
         reviewDTO.setGrade(grade);

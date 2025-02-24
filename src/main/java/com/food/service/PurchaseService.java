@@ -16,17 +16,13 @@ public class PurchaseService {
     private PurchaseMapper purchaseMapper;
 
     @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
     private PaymentService paymentService; // ✅ 변경: PaymentService를 사용
 
 
     /**
      * JWT 토큰 기반으로 사용자의 구매 내역 조회
      */
-    public List<PurchaseDTO> getPurchasesByToken(String userToken) {
-        String userId = jwtUtil.extractUserId(userToken); // JWT에서 userId 추출
+    public List<PurchaseDTO> getPurchasesByUserId(String userId) {
         return purchaseMapper.findPurchasesByUserId(userId);
     }
 
@@ -34,16 +30,17 @@ public class PurchaseService {
      * 결제 검증 후 구매 내역 저장 (트랜잭션 적용)
      */
     @Transactional
-    public void savePurchase(PurchaseDTO purchaseDTO, String userToken) {
-        String userId = jwtUtil.extractUserId(userToken);
+    public void savePurchase(PurchaseDTO purchaseDTO, String userId, String impUid) {
         purchaseDTO.setUserId(userId);
 
-        boolean isValidPayment = paymentService.verifyPayment(purchaseDTO.getMerchantUid(), purchaseDTO.getTotalAmount());
+        // ✅ 포트원 결제 검증 수행 (`imp_uid`로 검증)
+        boolean isValidPayment = paymentService.verifyPayment(impUid, purchaseDTO.getTotalAmount());
         if (!isValidPayment) {
-            paymentService.cancelPayment(purchaseDTO.getMerchantUid(), "결제 검증 실패로 인한 자동 환불");
+            paymentService.cancelPayment(impUid, "결제 검증 실패로 인한 자동 환불");
             throw new RuntimeException("결제 검증 실패: 구매 데이터를 저장할 수 없습니다.");
         }
 
+        // ✅ 결제 검증 성공 시 구매 내역 저장
         purchaseMapper.insertPurchase(purchaseDTO);
 
         for (ItemDTO item : purchaseDTO.getItems()) {
@@ -51,4 +48,5 @@ public class PurchaseService {
             purchaseMapper.insertItem(item);
         }
     }
+
 }

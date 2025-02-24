@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -79,31 +80,14 @@ public class MenuController {
                                     example = "[ { \"name\": \"돈까스\", \"quantity\": 2 }, { \"name\": \"떡볶이\", \"quantity\": 1 } ]"
                             )
                     )
-            ),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "Bearer 토큰 (예: Bearer xxxxxx.yyyyyy.zzzzzz)",
-                            required = true,
-                            in = ParameterIn.HEADER,
-                            schema = @Schema(type = "string", example = "Bearer xxxxxx.yyyyyy.zzzzzz")
-                    )
-            }
+            )
     )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/reduce")
     public ResponseEntity<String> reduceMenuQuantity(
-            @RequestHeader("Authorization") String token,
+            @AuthenticationPrincipal String userId,
             @RequestBody List<Map<String, Object>> cart) {
-
-        if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-
         try {
-            // 토큰 검증 및 사용자 ID 추출
-            String userId = jwtUtil.extractUserId(token); // JWT에서 사용자 ID 추출
-
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.status(401).body("Can Not Find Token");
             }

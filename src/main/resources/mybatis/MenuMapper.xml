@@ -27,16 +27,16 @@
         WHERE sector = 'D'
     </select>
 
-    <!-- 매뉴 이름으로 조회 -->
-    <select id="getMenuByName" parameterType="string" resultType="com.food.dto.MenuDTO">
-        SELECT * FROM menu WHERE name = #{name}
+    <!-- 매뉴 id로 조회 -->
+    <select id="getMenuByFoodId" parameterType="int" resultType="com.food.dto.MenuDTO">
+        SELECT * FROM menu WHERE foodId = #{foodId}
     </select>
 
     <!-- 재고 감소 -->
     <update id="reduceMenuQuantity">
         UPDATE menu
-        SET number = number - #{quantity}
-        WHERE name = #{name} AND number >= #{quantity}
+        SET inventory = inventory - #{quantity}
+        WHERE foodId = #{foodId} AND number >= #{quantity}
     </update>
 
 </mapper>

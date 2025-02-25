@@ -26,11 +26,11 @@ public class MenuService {
 
     public List<MenuDTO> getGongsikdang_DMenu() { return menuMapper.getGongsikdang_DMenu(); }
 
-    public boolean reduceMenuQuantity(String name, int quantity) {
-        MenuDTO menu = menuMapper.getMenuByName(name); // DB에서 직접 매뉴 조회
+    public boolean reduceMenuQuantity(int foodId, int quantity) {
+        MenuDTO menu = menuMapper.getMenuByFoodId(foodId); // DB에서 직접 매뉴 조회
 
         if (menu != null && menu.getNumber() >= quantity) {
-            menuMapper.reduceMenuQuantity(name, quantity); // 재고 감소 쿼리 실행
+            menuMapper.reduceMenuQuantity(foodId, quantity); // 재고 감소 쿼리 실행
             return true;
         }
         return false; // 재고가 부족하면 false 반환

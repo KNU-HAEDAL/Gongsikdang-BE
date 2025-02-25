@@ -97,13 +97,13 @@ public class MenuController {
 
             // 재고 감소 처리
             for (Map<String, Object> item : cart) {
-                String foodName = (String) item.get("foodName");
+                int foodId = (int) item.get("foodId");
                 int quantity = (int) item.get("quantity");
 
-                boolean isReduced = menuService.reduceMenuQuantity(foodName, quantity);
+                boolean isReduced = menuService.reduceMenuQuantity(foodId, quantity);
 
                 if (!isReduced) {
-                    return ResponseEntity.status(400).body("재고 부족: " + foodName);
+                    return ResponseEntity.status(400).body("재고 부족: " + foodId);
                 }
             }
 

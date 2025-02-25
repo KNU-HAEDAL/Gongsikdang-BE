@@ -24,9 +24,9 @@ public interface MenuMapper {
     //공식당_d 메뉴 가져오기
     List<MenuDTO> getGongsikdang_DMenu();
 
-    MenuDTO getMenuByName(@Param("name") String name); // 매뉴 이름으로 조회
+    MenuDTO getMenuByFoodId(@Param("foodId") int foodId); // 매뉴 이름으로 조회
 
-    void reduceMenuQuantity(@Param("name") String name, @Param("quantity") int quantity); // 재고 감소
+    void reduceMenuQuantity(@Param("foodId") int foodId, @Param("quantity") int quantity); // 재고 감소
 
 
 

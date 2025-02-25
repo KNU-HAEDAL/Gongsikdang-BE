@@ -35,10 +35,10 @@ public class PointController {
             summary = "포인트 충전",
             description = "사용자의 포인트를 충전합니다.(포인트 검증 및 저장)",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "merchantUid : 고유 주문번호. 각 결제마다 달라야 합니다. (mid_ + 타임스탬프)\n" +
+                    description = "merchantUid : 고유 주문번호. 각 결제마다 달라야 합니다. (mid_ + 타임스탬프)로 구현하면 됩니다 // \n" +
                             "**포트원(아임포트)**의 **IMP.request_pay()**는 JavaScript SDK입니다.\n" +
-                            "Swagger UI는 HTTP 요청만 보낼 수 있으며, JavaScript 실행 환경이 아님.\n" +
-                            "따라서, Swagger에서는 결제창 호출이 불가능합니다.",
+                            "Swagger UI는 HTTP 요청만 보낼 수 있으며, JavaScript 실행 환경이 아니기 떄문에 \n" +
+                            "Swagger에서는 결제창 호출이 불가능합니다.",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(example = "{ \"money\": 10000, \"merchant_uid\": \"order_1234567890\" }")

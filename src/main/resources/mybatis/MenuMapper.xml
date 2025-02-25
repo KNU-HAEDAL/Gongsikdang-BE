@@ -35,7 +35,7 @@
     <!-- 재고 감소 -->
     <update id="reduceMenuQuantity">
         UPDATE menu
-        SET inventory = inventory - #{quantity}
+        SET number = number - #{quantity}
         WHERE foodId = #{foodId} AND number >= #{quantity}
     </update>
 

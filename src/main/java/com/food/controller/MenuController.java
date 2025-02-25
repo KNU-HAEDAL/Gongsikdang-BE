@@ -77,7 +77,10 @@ public class MenuController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(
-                                    example = "[ { \"name\": \"돈까스\", \"quantity\": 2 }, { \"name\": \"떡볶이\", \"quantity\": 1 } ]"
+                                    example = "[ " +
+                                            "{ \"foodId\": 1, \"foodName\": \"돈까스\", \"quantity\": 2 }," +
+                                            " { \"foodId\": 2, \"foodName\": \"떡볶이\", \"quantity\": 1 } " +
+                                            "]"
                             )
                     )
             )
@@ -94,13 +97,13 @@ public class MenuController {
 
             // 재고 감소 처리
             for (Map<String, Object> item : cart) {
-                String name = (String) item.get("name");
+                String foodName = (String) item.get("foodName");
                 int quantity = (int) item.get("quantity");
 
-                boolean isReduced = menuService.reduceMenuQuantity(name, quantity);
+                boolean isReduced = menuService.reduceMenuQuantity(foodName, quantity);
 
                 if (!isReduced) {
-                    return ResponseEntity.status(400).body("재고 부족: " + name);
+                    return ResponseEntity.status(400).body("재고 부족: " + foodName);
                 }
             }
 

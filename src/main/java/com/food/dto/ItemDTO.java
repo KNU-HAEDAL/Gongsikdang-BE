@@ -13,6 +13,7 @@ public class ItemDTO {
     private Integer grade; // 평점
     private Integer quantity; // 구매 수량
     private Integer price; // 상품 가격
+    private String purchaseId; // 구매아이디
 }
 
 

@@ -6,7 +6,7 @@
     <!-- 사용자 ID로 구매 내역 조회 -->
     <select id="findPurchasesByUserId" resultMap="purchaseResultMap">
         SELECT
-            p.foodId AS purchase_foodId,
+            p.purchaseId AS purchase_Id,
             p.merchantUid,
             p.userId,
             p.date,
@@ -17,13 +17,13 @@
             i.quantity AS item_quantity,
             i.price AS item_price
         FROM purchase p
-                 LEFT JOIN item i ON p.foodId = i.foodId
+                 LEFT JOIN item i ON p.purchaseId = i.purchaseId
         WHERE p.userId = #{userId}
     </select>
 
     <!-- 구매 결과 매핑 -->
     <resultMap id="purchaseResultMap" type="com.food.dto.PurchaseDTO">
-        <id property="foodId" column="purchase_foodId"/>
+        <id property="purchaseId" column="purchase_Id"/>
         <result property="merchantUid" column="merchantUid"/>
         <result property="userId" column="userId"/>
         <result property="date" column="date"/>
@@ -39,14 +39,14 @@
 
     <!-- 구매 데이터 저장 -->
     <insert id="insertPurchase" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO purchaseList (foodId, foodName, merchantUid, userId, date, totalAmount, paymentMethod, status)
-        VALUES (#{purchase.foodId}, #{purchase.foodName}, #{purchase.merchantUid}, #{purchase.userId}, #{purchase.date}, #{purchase.totalAmount}, #{purchase.paymentMethod}, #{purchase.status})
+        INSERT INTO purchaseList (purchaseId, foodName, merchantUid, userId, date, totalAmount, paymentMethod, status)
+        VALUES (#{purchase.purchaseId}, #{purchase.foodName}, #{purchase.merchantUid}, #{purchase.userId}, #{purchase.date}, #{purchase.totalAmount}, #{purchase.paymentMethod}, #{purchase.status})
     </insert>
 
     <!-- 아이템 데이터 저장 -->
     <insert id="insertItem">
-        INSERT INTO item (foodId, foodName, quantity, price)
-        VALUES (#{item.foodId}, #{item.foodName}, #{item.quantity}, #{item.price})
+        INSERT INTO item (purchaseId ,foodId, foodName, quantity, price)
+        VALUES (#{item.purchaseId}, #{item.foodId}, #{item.foodName}, #{item.quantity}, #{item.price})
     </insert>
 
 </mapper>

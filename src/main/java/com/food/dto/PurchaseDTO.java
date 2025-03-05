@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @ToString
 public class PurchaseDTO {
-    private Integer foodId; // Auto Increment된 고유 ID
+    private Integer purchaseId; // Auto Increment된 고유 ID
     private String merchantUid; // 주문 고유 번호
     private String userId; // 사용자 ID
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

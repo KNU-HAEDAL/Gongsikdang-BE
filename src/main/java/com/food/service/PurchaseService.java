@@ -44,7 +44,7 @@ public class PurchaseService {
         purchaseMapper.insertPurchase(purchaseDTO);
 
         for (ItemDTO item : purchaseDTO.getItems()) {
-            item.setFoodId(purchaseDTO.getFoodId());
+            item.setFoodId(purchaseDTO.getPurchaseId());
             purchaseMapper.insertItem(item);
         }
     }

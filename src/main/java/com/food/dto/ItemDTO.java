@@ -8,6 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ItemDTO {
+    private int itemId; //상품 필드 고유 ID(auto)
     private Integer foodId; // 음식의 고유 ID
     private String foodName; // 상품명
     private Integer grade; // 평점

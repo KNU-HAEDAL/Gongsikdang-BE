@@ -26,9 +26,6 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-
     @Operation(summary = "모든 메뉴 조회", description = "모든 메뉴를 조회합니다.")
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping

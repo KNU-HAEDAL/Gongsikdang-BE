@@ -46,6 +46,10 @@ public class UserService {
         return userMapper.findByUsername(id) != null;
     }
 
+    public String getUserName(String userId) {
+        return userMapper.findByUsername(userId).getName();
+    }
+
 
 }
 

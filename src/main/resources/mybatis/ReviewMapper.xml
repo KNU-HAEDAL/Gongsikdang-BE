@@ -2,6 +2,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.food.mapper.ReviewMapper">
+
+    <resultMap id="reviewResultMap" type="com.food.dto.ReviewDTO">
+        <result column="reviewId" property="reviewId"/>
+        <result column="userId" property="userId"/>
+        <result column="foodId" property="foodId"/>
+        <result column="reviewContent" property="reviewContent"/>
+        <result column="grade" property="grade"/>
+        <result column="reviewDate" property="reviewDate"/>
+        <result column="foodName" property="foodName"/>  <!-- 👈 명확한 매핑 -->
+    </resultMap>
+
     <select id="selectAllReviews" resultType="com.food.dto.ReviewDTO">
         SELECT r.*, m.foodName
         FROM review r

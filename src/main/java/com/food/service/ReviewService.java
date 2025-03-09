@@ -16,9 +16,6 @@ public class ReviewService {
     @Autowired
     private ReviewMapper reviewMapper;
 
-    @Autowired
-    private MenuMapper menuMapper;
-
     public List<ReviewDTO> getAllReviews(Integer foodId, String sort) {
         return reviewMapper.selectAllReviews(foodId, sort);
     }

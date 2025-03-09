@@ -48,7 +48,7 @@ public class ReviewController {
 
     @Operation(
             summary = "리뷰 작성",
-            description = "특정 음식에 대한 리뷰를 작성합니다.",
+            description = "특정 음식에 대한 리뷰를 작성합니다. \n",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "리뷰 작성 요청 예시",
                     content = @Content(
@@ -82,26 +82,5 @@ public class ReviewController {
 
         // 성공 응답 반환
         return ResponseEntity.ok("리뷰 작성 성공");
-    }
-
-    @Operation(
-            summary = "매뉴 이름 조회",
-            description = "특정 음식의 리뷰를 위한 이름을 가져옵니다. \n",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "예시",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{ \"foodId\": 1 }")
-                    )
-            )
-    )
-    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
-    @GetMapping("/name")
-    public ResponseEntity<String> getReviewName(
-            @RequestBody Map<String, Object> requestBody
-    ) {
-        int foodId = (int) requestBody.get("foodId");
-        String foodName = reviewService.getReviewName(foodId);
-        return ResponseEntity.ok(foodName);
     }
 }

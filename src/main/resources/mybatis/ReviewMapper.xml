@@ -3,8 +3,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.food.mapper.ReviewMapper">
     <select id="selectAllReviews" resultType="com.food.dto.ReviewDTO">
-        SELECT * FROM review
-        WHERE foodId = #{foodId}
+        SELECT r.*, m.foodName
+        FROM review r
+        JOIN menu m ON r.foodId = m.foodId
+        WHERE r.foodId = #{foodId}
         <trim prefix="ORDER BY grade" prefixOverrides=",">
             <if test="sort eq 'asc'">
                 ASC

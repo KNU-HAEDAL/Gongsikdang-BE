@@ -15,4 +15,5 @@ public class ReviewDTO {
     private String reviewContent;
     private Integer grade;
     private Date reviewDate;
+    private String foodName; // 추가된 필드
 }

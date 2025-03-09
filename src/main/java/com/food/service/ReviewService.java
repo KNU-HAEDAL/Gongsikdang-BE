@@ -28,9 +28,4 @@ public class ReviewService {
         reviewMapper.insertReview(reviewDTO);
         reviewMapper.updateFoodAvgStarRating(reviewDTO.getFoodId()); // 평균 별점 업데이트
     }
-
-    public String getReviewName(int foodId) {
-        MenuDTO menuDTO = menuMapper.getMenuByFoodId(foodId);
-        return menuDTO.getFoodName();
-    }
 }

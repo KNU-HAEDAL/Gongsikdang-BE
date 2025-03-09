@@ -86,7 +86,16 @@ public class ReviewController {
 
     @Operation(
             summary = "매뉴 이름 조회",
-            description = "특정 음식의 리뷰를 위한 이름을 가져옵니다. \n"
+            description = "특정 음식의 리뷰를 위한 이름을 가져옵니다. \n",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "요청 예시",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                            example = "{ \"foodId\": 1 }"
+                    )
+            )
+    )
     )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping("/name")

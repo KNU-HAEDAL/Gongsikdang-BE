@@ -65,8 +65,6 @@ public class ReviewController {
             @AuthenticationPrincipal String userId,
             @RequestBody Map<String, Object> requestBody
     ) {
-        System.out.println("🔥 리뷰 작성 시작");
-
         // Request Body에서 값 추출
         int foodId = (int) requestBody.get("foodId");
         String reviewContent = (String) requestBody.get("reviewContent");
@@ -84,5 +82,18 @@ public class ReviewController {
 
         // 성공 응답 반환
         return ResponseEntity.ok("리뷰 작성 성공");
+    }
+
+    @Operation(
+            summary = "리뷰 조회",
+            description = "특정 음식의 리뷰를 위한 이름을 가져옵니다. \n"
+    )
+    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
+    @GetMapping("/read/{foodId}")
+    public ResponseEntity<String> getReviewName(
+            @PathVariable Integer foodId
+    ) {
+        String foodName = reviewService.getReviewName(foodId);
+        return ResponseEntity.ok(foodName);
     }
 }

@@ -91,8 +91,9 @@ public class ReviewController {
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping("/read/{foodId}")
     public ResponseEntity<String> getReviewName(
-            @PathVariable Integer foodId
+            @RequestBody Map<String, Object> requestBody
     ) {
+        int foodId = (int) requestBody.get("foodId");
         String foodName = reviewService.getReviewName(foodId);
         return ResponseEntity.ok(foodName);
     }

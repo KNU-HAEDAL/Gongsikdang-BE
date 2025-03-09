@@ -89,7 +89,7 @@ public class ReviewController {
             description = "특정 음식의 리뷰를 위한 이름을 가져옵니다. \n"
     )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
-    @GetMapping("/read/{foodId}")
+    @GetMapping("/read/name")
     public ResponseEntity<String> getReviewName(
             @RequestBody Map<String, Object> requestBody
     ) {

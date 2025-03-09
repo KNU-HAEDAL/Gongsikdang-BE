@@ -14,6 +14,4 @@ public interface ReviewMapper {
     void insertReview(@Param("review") ReviewDTO reviewDTO);
 
     void updateFoodAvgStarRating(Integer foodId);
-
-    String selectReviewName(Integer foodId);
 }

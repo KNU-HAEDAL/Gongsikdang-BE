@@ -30,9 +30,4 @@
         )
         WHERE foodId = #{foodId};
     </update>
-
-    <select id="selectReviewName">
-        SELECT foodName FROM menu
-        WHERE foodId = #{foodId}
-    </select>
 </mapper>

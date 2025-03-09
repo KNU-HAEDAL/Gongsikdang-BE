@@ -1,6 +1,8 @@
 package com.food.service;
 
+import com.food.dto.MenuDTO;
 import com.food.dto.ReviewDTO;
+import com.food.mapper.MenuMapper;
 import com.food.mapper.ReviewMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class ReviewService {
     @Autowired
     private ReviewMapper reviewMapper;
 
+    @Autowired
+    private MenuMapper menuMapper;
+
     public List<ReviewDTO> getAllReviews(Integer foodId, String sort) {
         return reviewMapper.selectAllReviews(foodId, sort);
     }
@@ -24,8 +29,8 @@ public class ReviewService {
         reviewMapper.updateFoodAvgStarRating(reviewDTO.getFoodId()); // 평균 별점 업데이트
     }
 
-    public String getReviewName(Integer foodId) {
-        return reviewMapper.selectReviewName(foodId);
+    public String getReviewName(int foodId) {
+        MenuDTO menuDTO = menuMapper.getMenuByFoodId(foodId);
+        return menuDTO.getFoodName();
     }
-
 }

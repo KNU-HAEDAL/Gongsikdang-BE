@@ -17,7 +17,7 @@ public class PurchaseDTO {
     private String impUid;
     private String merchantUid; // 주문 고유 번호
     private String userId; // 사용자 ID
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     private Date date; // 구매 날짜
     private Integer totalAmount; // 총 결제 금액
     private String paymentMethod; // 결제 방식

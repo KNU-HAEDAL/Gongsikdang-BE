@@ -33,13 +33,6 @@ public class PurchaseService {
     public void savePurchase(PurchaseDTO purchaseDTO, String userId, String impUid) {
         purchaseDTO.setUserId(userId);
 
-        // ✅ 포트원 결제 검증 수행 (`imp_uid`로 검증)
-        boolean isValidPayment = paymentService.verifyPayment(impUid, purchaseDTO.getTotalAmount());
-        if (!isValidPayment) {
-            paymentService.cancelPayment(impUid, "결제 검증 실패로 인한 자동 환불");
-            throw new RuntimeException("결제 검증 실패: 구매 데이터를 저장할 수 없습니다.");
-        }
-
         // ✅ 결제 검증 성공 시 구매 내역 저장
         purchaseMapper.insertPurchase(purchaseDTO);
 

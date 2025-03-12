@@ -87,6 +87,7 @@ public class PurchaseController {
                             mediaType = "application/json",
                             schema = @Schema(
                                     example = "{\n" +
+                                            "  \"impUid\": \"imp_1234567890\", \n" +
                                             "  \"merchantUid\": \"mid_1234567890\",\n" +
                                             "  \"date\": \"2025-02-24T12:34:56.789Z\",\n" +
                                             "  \"totalAmount\": 20000,\n" +
@@ -120,16 +121,16 @@ public class PurchaseController {
     @PostMapping("/purchases")
     public ResponseEntity<?> savePurchase(@AuthenticationPrincipal String userId, @RequestBody PurchaseDTO purchaseDTO) {
         try {
-            // 🔥 `merchant_uid`로 `imp_uid` 조회 (프론트는 `imp_uid`를 모름)
-            String impUid = paymentService.getImpUidByMerchantUid(purchaseDTO.getMerchantUid());
+            String impUid = purchaseDTO.getImpUid(); // ✅ 프론트에서 `imp_uid`를 직접 받아옴
 
-            System.out.println("impUid조회성공");
+            // ✅ 결제 검증 수행
+            boolean isValidPayment = paymentService.verifyPayment(impUid, purchaseDTO.getTotalAmount());
+            if (!isValidPayment) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("결제 검증 실패: 자동 환불됨.");
+            }
 
-            // 🔒 구매 내역 저장 (impUid 검증 및 트랜잭션 처리)
+            // ✅ 결제 검증 성공 후 구매 내역 저장
             purchaseService.savePurchase(purchaseDTO, userId, impUid);
-
-            System.out.println("구매내역저장성공");
-
             return ResponseEntity.status(HttpStatus.CREATED).body("결제 검증 완료 및 구매 데이터 저장 성공");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

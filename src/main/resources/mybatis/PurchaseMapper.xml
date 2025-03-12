@@ -39,8 +39,8 @@
 
     <!-- 구매 데이터 저장 -->
     <insert id="insertPurchase" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO purchaseList (purchaseId, foodName, merchantUid, userId, date, totalAmount, paymentMethod, status)
-        VALUES (#{purchase.purchaseId}, #{purchase.foodName}, #{purchase.merchantUid}, #{purchase.userId}, #{purchase.date}, #{purchase.totalAmount}, #{purchase.paymentMethod}, #{purchase.status})
+        INSERT INTO purchaseList (impUid, purchaseId, foodName, merchantUid, userId, date, totalAmount, paymentMethod, status)
+        VALUES (#{impUid}, #{purchase.purchaseId}, #{purchase.foodName}, #{purchase.merchantUid}, #{purchase.userId}, #{purchase.date}, #{purchase.totalAmount}, #{purchase.paymentMethod}, #{purchase.status})
     </insert>
 
     <!-- 아이템 데이터 저장 -->

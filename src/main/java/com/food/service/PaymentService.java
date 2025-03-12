@@ -5,6 +5,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,10 +15,17 @@ public class PaymentService {
     private static final String PORTONE_API_KEY = "5682867700354005";
     private static final String PORTONE_API_SECRET = "VJL6GqWeXu3LWx2d37uFkdXQPeWSnAQjutjDKjkuXysM9gCk1JQXkk1rz3owzstHy0mVYtzlJw4jquAO";
 
+    private String cachedAccessToken;
+    private Instant tokenExpiryTime;
+
     /**
-     * 포트원 Access Token 발급
+     * 포트원 Access Token 발급 (30분간 유지)
      */
     private String getAccessToken() {
+        if (cachedAccessToken != null && Instant.now().isBefore(tokenExpiryTime)) {
+            return cachedAccessToken; // 캐싱된 토큰 반환
+        }
+
         RestTemplate restTemplate = new RestTemplate();
         String url = PORTONE_API_URL + "/users/getToken";
 
@@ -25,31 +33,14 @@ public class PaymentService {
         requestBody.put("imp_key", PORTONE_API_KEY);
         requestBody.put("imp_secret", PORTONE_API_SECRET);
 
-        String response = restTemplate.postForObject(url, requestBody, String.class);
-        JSONObject jsonResponse = new JSONObject(response);
-        return jsonResponse.getJSONObject("response").getString("access_token");
+        ResponseEntity<String> response = restTemplate.postForEntity(url, requestBody, String.class);
+        JSONObject jsonResponse = new JSONObject(response.getBody());
+
+        cachedAccessToken = jsonResponse.getJSONObject("response").getString("access_token");
+        tokenExpiryTime = Instant.now().plusSeconds(1800); // 30분 후 만료
+
+        return cachedAccessToken;
     }
-
-    public String getImpUidByMerchantUid(String merchantUid) {
-        try {
-            String accessToken = getAccessToken();
-            RestTemplate restTemplate = new RestTemplate();
-            String url = PORTONE_API_URL + "/payments/find/" + merchantUid;
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + accessToken);
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-            JSONObject jsonResponse = new JSONObject(response.getBody());
-            String impUid = jsonResponse.getJSONObject("response").getString("imp_uid");
-
-            return impUid;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to get imp_uid from Portone");
-        }
-    }
-
 
     /**
      * 결제 검증 API (포트원 REST API)
@@ -66,11 +57,21 @@ public class PaymentService {
 
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
             JSONObject jsonResponse = new JSONObject(response.getBody());
+
+            if (!jsonResponse.has("response")) {
+                throw new RuntimeException("결제 정보를 찾을 수 없음.");
+            }
+
             int amount = jsonResponse.getJSONObject("response").getInt("amount");
             String status = jsonResponse.getJSONObject("response").getString("status");
 
-            // 🔥 금액과 상태("paid") 검증
-            return (amount == expectedAmount) && "paid".equals(status);
+            // 🔥 금액과 상태 검증
+            if (amount != expectedAmount || !"paid".equals(status)) {
+                cancelPayment(impUid, "결제 검증 실패로 인한 자동 환불");
+                return false;
+            }
+
+            return true;
         } catch (Exception e) {
             return false;
         }
@@ -80,6 +81,10 @@ public class PaymentService {
      * 결제 취소 API (포트원 REST API)
      */
     public boolean cancelPayment(String impUid, String reason) {
+        if (reason == null || reason.isBlank()) {
+            reason = "결제 검증 실패로 인한 자동 환불"; // 기본 사유 설정
+        }
+
         try {
             String accessToken = getAccessToken();
             RestTemplate restTemplate = new RestTemplate();

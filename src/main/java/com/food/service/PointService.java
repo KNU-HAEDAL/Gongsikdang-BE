@@ -3,26 +3,22 @@ package com.food.service;
 import com.food.dto.UserDTO;
 import com.food.mapper.PointMapper;
 import com.food.mapper.UserMapper;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PointService {
 
     @Autowired
     private PointMapper pointMapper;
-
     @Autowired
     private UserMapper userMapper;
-
     @Autowired
     private PaymentService paymentService; // ✅ 공통 결제 검증 서비스 사용
 
     /**
-     * 포인트 조회
+     * 🔥 포인트 조회
      */
     public int getUserPoint(String userId) {
         UserDTO user = userMapper.findByUsername(userId);
@@ -33,7 +29,7 @@ public class PointService {
     }
 
     /**
-     * 포인트 충전 (트랜잭션 적용) + 충전 실패 시 자동 환불
+     * 🔥 포인트 충전 (트랜잭션 적용) + 충전 실패 시 자동 환불
      */
     @Transactional
     public void savePoint(String userId, int point, String impUid) {

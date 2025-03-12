@@ -14,6 +14,7 @@ import java.util.List;
 @ToString
 public class PurchaseDTO {
     private Integer purchaseId; // Auto Increment된 고유 ID
+    private String impUid;
     private String merchantUid; // 주문 고유 번호
     private String userId; // 사용자 ID
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

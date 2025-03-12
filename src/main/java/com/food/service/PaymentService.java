@@ -55,18 +55,29 @@ public class PaymentService {
             headers.set("Authorization", "Bearer " + accessToken);
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
+            System.out.println("✅ [verifyPayment] 요청 URL: " + url);
+            System.out.println("✅ [verifyPayment] impUid: " + impUid);
+            System.out.println("✅ [verifyPayment] expectedAmount: " + expectedAmount);
+
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
             JSONObject jsonResponse = new JSONObject(response.getBody());
 
+            System.out.println("✅ [verifyPayment] 포트원 응답: " + jsonResponse.toString());
+
             if (!jsonResponse.has("response")) {
+                System.out.println("결제 정보를 찾을 수 없음");
                 throw new RuntimeException("결제 정보를 찾을 수 없음.");
             }
 
             int amount = jsonResponse.getJSONObject("response").getInt("amount");
             String status = jsonResponse.getJSONObject("response").getString("status");
 
+            System.out.println("✅ [verifyPayment] 결제된 금액: " + amount);
+            System.out.println("✅ [verifyPayment] 결제 상태: " + status);
+
             // 🔥 금액과 상태 검증
             if (amount != expectedAmount || !"paid".equals(status)) {
+                System.out.println("결제 검증 실패로 인한 자동 환불");
                 cancelPayment(impUid, "결제 검증 실패로 인한 자동 환불");
                 return false;
             }

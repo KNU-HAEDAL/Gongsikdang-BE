@@ -123,15 +123,24 @@ public class PurchaseController {
         try {
             String impUid = purchaseDTO.getImpUid(); // ✅ 프론트에서 `imp_uid`를 직접 받아옴
 
+            System.out.println("결제시작 " + purchaseDTO);
+
             // ✅ 결제 검증 수행
             boolean isValidPayment = paymentService.verifyPayment(impUid, purchaseDTO.getTotalAmount());
             if (!isValidPayment) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("결제 검증 실패: 자동 환불됨.");
             }
 
+            System.out.println("결제검증 완료");
+
             // ✅ 결제 검증 성공 후 구매 내역 저장
             purchaseService.savePurchase(purchaseDTO, userId, impUid);
+
+            System.out.println("결제내역 저장 완료");
+
             return ResponseEntity.status(HttpStatus.CREATED).body("결제 검증 완료 및 구매 데이터 저장 성공");
+
+
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

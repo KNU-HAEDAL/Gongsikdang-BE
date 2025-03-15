@@ -48,4 +48,19 @@ public class PurchaseService {
         }
     }
 
+    public void deletePurchaseByImpUid(String impUid) {
+        PurchaseDTO purchase = purchaseMapper.findByImpUid(impUid);
+        int purchaseId = purchase.getPurchaseId();
+
+        if (purchase != null) {
+            // ✅ 먼저 item 테이블의 데이터를 삭제
+            purchaseMapper.deleteItemsByPurchaseId(purchaseId);
+
+            // ✅ 그 다음 purchaseList 테이블의 데이터를 삭제
+            purchaseMapper.deletePurchaseById(purchaseId);
+        } else {
+            throw new RuntimeException("결제 내역을 찾을 수 없습니다.");
+        }
+    }
+
 }

@@ -7,6 +7,7 @@
     <select id="findPurchasesByUserId" resultMap="purchaseResultMap">
         SELECT
             p.purchaseId AS purchase_Id,
+            p.impUid,
             p.merchantUid,
             p.userId,
             p.date,
@@ -24,6 +25,7 @@
     <!-- 구매 결과 매핑 -->
     <resultMap id="purchaseResultMap" type="com.food.dto.PurchaseDTO">
         <id property="purchaseId" column="purchaseId"/>
+        <result property="impUid" column="impUid"/>
         <result property="merchantUid" column="merchantUid"/>
         <result property="userId" column="userId"/>
         <result property="date" column="date"/>
@@ -36,6 +38,29 @@
             <result property="price" column="item_price"/>
         </collection>
     </resultMap>
+
+    <!-- 사용자 impUid로 데이터 내역 조회 -->
+    <select id="findByImpUid" resultType="com.food.dto.PurchaseDTO">
+        SELECT
+            p.impUid,
+            p.purchaseId AS purchase_Id,
+            p.merchantUid,
+            p.userId,
+            p.date,
+            p.totalAmount,
+            p.paymentMethod,
+            p.status
+        FROM purchase p
+        WHERE p.impUid = #{impUid}
+    </select>
+
+    <delete id="deleteItemsByPurchaseId">
+        DELETE FROM item WHERE purchaseId = #{purchaseId}
+    </delete>
+
+    <delete id="deletePurchaseById">
+        DELETE FROM purchase WHERE purchaseId = #{purchaseId}
+    </delete>
 
     <!-- 구매 데이터 저장 -->
     <insert id="insertPurchase" useGeneratedKeys="true" keyProperty="purchaseId">

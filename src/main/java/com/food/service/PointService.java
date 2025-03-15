@@ -28,6 +28,10 @@ public class PointService {
         return pointMapper.getUserPoint(userId);
     }
 
+    public void addPoints(String userId, int amount) {
+        pointMapper.updatePoint(userId, amount); // 포인트 충전
+    }
+
     /**
      * 🔥 포인트 충전 (트랜잭션 적용) + 충전 실패 시 자동 환불
      */

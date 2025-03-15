@@ -38,7 +38,7 @@
     </resultMap>
 
     <!-- 구매 데이터 저장 -->
-    <insert id="insertPurchase" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPurchase" useGeneratedKeys="true" keyProperty="purchaseId">
         INSERT INTO purchase (impUid, purchaseId, merchantUid, userId, date, totalAmount, paymentMethod, status)
         VALUES (#{purchase.impUid}, #{purchase.purchaseId}, #{purchase.merchantUid}, #{purchase.userId}, #{purchase.date}, #{purchase.totalAmount}, #{purchase.paymentMethod}, #{purchase.status})
     </insert>

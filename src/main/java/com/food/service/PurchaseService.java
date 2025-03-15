@@ -31,14 +31,20 @@ public class PurchaseService {
      */
     @Transactional
     public void savePurchase(PurchaseDTO purchaseDTO, String userId) {
+
         purchaseDTO.setUserId(userId);
 
-        // ✅ 결제 검증 성공 시 구매 내역 저장
-        purchaseMapper.insertPurchase(purchaseDTO);
+        try {
+            purchaseMapper.insertPurchase(purchaseDTO);
+            System.out.println("✅ 구매 내역 저장 완료: " + purchaseDTO);
 
-        for (ItemDTO item : purchaseDTO.getItems()) {
-            item.setPurchaseId(purchaseDTO.getPurchaseId());
-            purchaseMapper.insertItem(item);
+            for (ItemDTO item : purchaseDTO.getItems()) {
+                item.setPurchaseId(purchaseDTO.getPurchaseId());
+                purchaseMapper.insertItem(item);
+            }
+        } catch (Exception e) {
+            System.out.println("❌ 데이터 저장 중 오류 발생: " + e.getMessage());
+            throw new RuntimeException("구매 내역 저장 실패", e);
         }
     }
 

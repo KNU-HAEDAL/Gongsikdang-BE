@@ -156,7 +156,16 @@ public class PurchaseController {
     /**
      * 결제 취소 API (사용자가 직접 결제 취소)
      */
-    @Operation(summary = "결제 금액을 가져오고 결제내역을 삭제", description = "결제 금액을 가져오고 db에 있던 결제내역을 삭제합니다")
+    @Operation(
+            summary = "결제 취소 및 결제 금액을 가져오고 포인트 전환",
+            description = "결제 취소 및 결제 금액을 가져오고 포인트 전환)",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(example = "{ \"impUid\": \"imp_693025286905\", \"reason\": 1시간 넘어버림 }")
+                    )
+            )
+    )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/purchases/cancel")
     public ResponseEntity<?> cancelPayment(

@@ -23,7 +23,7 @@
 
     <!-- 구매 결과 매핑 -->
     <resultMap id="purchaseResultMap" type="com.food.dto.PurchaseDTO">
-        <id property="purchaseId" column="purchase_Id"/>
+        <id property="purchaseId" column="purchaseId"/>
         <result property="merchantUid" column="merchantUid"/>
         <result property="userId" column="userId"/>
         <result property="date" column="date"/>

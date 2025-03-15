@@ -30,14 +30,14 @@ public class PurchaseService {
      * 결제 검증 후 구매 내역 저장 (트랜잭션 적용)
      */
     @Transactional
-    public void savePurchase(PurchaseDTO purchaseDTO, String userId, String impUid) {
+    public void savePurchase(PurchaseDTO purchaseDTO, String userId) {
         purchaseDTO.setUserId(userId);
 
         // ✅ 결제 검증 성공 시 구매 내역 저장
         purchaseMapper.insertPurchase(purchaseDTO);
 
         for (ItemDTO item : purchaseDTO.getItems()) {
-            item.setFoodId(purchaseDTO.getPurchaseId());
+            item.setPurchaseId(purchaseDTO.getPurchaseId());
             purchaseMapper.insertItem(item);
         }
     }

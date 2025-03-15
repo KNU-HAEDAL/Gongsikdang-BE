@@ -54,14 +54,6 @@
         WHERE p.impUid = #{impUid}
     </select>
 
-    <delete id="deleteItemsByPurchaseId">
-        DELETE FROM item WHERE purchaseId = #{purchaseId}
-    </delete>
-
-    <delete id="deletePurchaseById">
-        DELETE FROM purchase WHERE purchaseId = #{purchaseId}
-    </delete>
-
     <!-- 구매 데이터 저장 -->
     <insert id="insertPurchase" useGeneratedKeys="true" keyProperty="purchaseId">
         INSERT INTO purchase (impUid, purchaseId, merchantUid, userId, date, totalAmount, paymentMethod, status)
@@ -73,5 +65,21 @@
         INSERT INTO item (purchaseId ,foodId, foodName, quantity, price, itemId)
         VALUES (#{item.purchaseId}, #{item.foodId}, #{item.foodName}, #{item.quantity}, #{item.price}, #{item.itemId})
     </insert>
+
+    <!-- 기한 만료된 결제 -->
+    <select id="findExpiredPayments" resultType="com.food.dto.PurchaseDTO">
+        SELECT * FROM purchase
+        WHERE TIMESTAMPDIFF(MINUTE, date , NOW()) >= 60;
+    </select>
+
+    <!-- 상품 테이블 삭제 -->
+    <delete id="deleteItemsByPurchaseId">
+        DELETE FROM item WHERE purchaseId = #{purchaseId}
+    </delete>
+
+    <!-- 구매 테이블 삭제 -->
+    <delete id="deletePurchaseById">
+        DELETE FROM purchase WHERE purchaseId = #{purchaseId}
+    </delete>
 
 </mapper>

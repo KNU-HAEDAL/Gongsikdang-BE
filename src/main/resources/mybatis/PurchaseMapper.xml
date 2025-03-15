@@ -45,8 +45,8 @@
 
     <!-- 아이템 데이터 저장 -->
     <insert id="insertItem">
-        INSERT INTO item (purchaseId ,foodId, foodName, quantity, price)
-        VALUES (#{item.purchaseId}, #{item.foodId}, #{item.foodName}, #{item.quantity}, #{item.price})
+        INSERT INTO item (purchaseId ,foodId, foodName, quantity, price, itemId)
+        VALUES (#{item.purchaseId}, #{item.foodId}, #{item.foodName}, #{item.quantity}, #{item.price}, #{item.itemId})
     </insert>
 
 </mapper>

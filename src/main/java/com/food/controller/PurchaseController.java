@@ -157,8 +157,8 @@ public class PurchaseController {
      * 결제 취소 API (사용자가 직접 결제 취소)
      */
     @Operation(
-            summary = "결제 취소 및 결제 금액을 가져오고 포인트 전환",
-            description = "결제 취소 및 결제 금액을 가져오고 포인트 전환)",
+            summary = "결제 취소 및 포인트 전환 후 DB 삭제",
+            description = "결제 취소 후 포인트를 적립하고 기존 결제 정보를 DB에서 삭제",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
@@ -189,42 +189,21 @@ public class PurchaseController {
 
         // ✅ 포인트 적립 (취소 성공 시)
         try {
-            // 🔒 포인트 저장 (impUid 검증 및 트랜잭션 처리)
             pointService.addPoints(userId, refundAmount);
-            return ResponseEntity.ok("포인트 충전 완료");
+            System.out.println("✅ [포인트 적립 완료] 유저 ID: " + userId + " | 적립 금액: " + refundAmount);
         } catch (Exception e) {
             return ResponseEntity.status(400).body("포인트 충전 실패: " + e.getMessage());
         }
-    }
 
-    /**
-     * 결제 취소한거 내역 삭제 API (사용자가 직접 결제 취소)
-     */
-    @Operation(
-            summary = "결제 내역 삭제 API",
-            description = "결제 내역 삭제 API",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{ \"impUid\": \"imp_693025286905\"}")
-                    )
-            )
-    )
-    @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
-    @DeleteMapping("/purchases/delete")
-    public ResponseEntity<?> deletePurchase(
-            @RequestBody Map<String, String> requestBody
-    ) {
-        String impUid = requestBody.get("impUid");
-
-        // ✅ DB에서 해당 결제 내역 삭제
+        // ✅ DB에서 해당 결제 내역 삭제 (취소 후 바로 처리)
         try {
             purchaseService.deletePurchaseByImpUid(impUid);
             System.out.println("✅ [DB 삭제 완료] impUid: " + impUid);
-            return ResponseEntity.ok("결제 내역 삭제 성공");
         } catch (Exception e) {
             System.out.println("❌ [DB 삭제 실패] impUid: " + impUid + " | 에러: " + e.getMessage());
             return ResponseEntity.status(500).body("결제 취소 후 DB 삭제 실패: " + e.getMessage());
         }
+
+        return ResponseEntity.ok("결제 취소 완료 및 포인트 충전, 결제 내역 삭제 완료");
     }
 }

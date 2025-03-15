@@ -60,7 +60,7 @@ public class ReviewController {
             )
     )
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
-    @PostMapping("/write")
+    @PostMapping("/api/review/write")
     public ResponseEntity<String> addReview(
             @AuthenticationPrincipal String userId,
             @RequestBody Map<String, Object> requestBody

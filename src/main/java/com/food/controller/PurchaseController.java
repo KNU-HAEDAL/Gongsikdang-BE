@@ -93,7 +93,7 @@ public class PurchaseController {
                                             "  \"totalAmount\": 20000,\n" +
                                             "  \"paymentMethod\": \"pay\",\n" +
                                             "  \"pgProvider\": \"kakao\",\n" +
-                                            "  \"item\": [\n" +
+                                            "  \"items\": [\n" +
                                             "    {\n" +
                                             "      \"foodId\": 1,\n" +
                                             "      \"foodName\": \"돈까스\",\n" +

@@ -132,6 +132,7 @@ public class PurchaseController {
             }
 
             System.out.println("결제검증 완료");
+            System.out.println("결제저장시작 " + purchaseDTO);
 
             // ✅ 결제 검증 성공 후 구매 내역 저장
             purchaseService.savePurchase(purchaseDTO, userId);

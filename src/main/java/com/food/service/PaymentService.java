@@ -89,11 +89,53 @@ public class PaymentService {
     }
 
     /**
-     * 결제 취소 API (포트원 REST API)
+     * 결제 정보 조회 API
+     */
+    public Integer getPaymentAmount(String impUid) {
+        try {
+            String accessToken = getAccessToken();
+            String url = PORTONE_API_URL + "/payments/" + impUid;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + accessToken);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            RestTemplate restTemplate = new RestTemplate();
+
+            System.out.println("🔍 [getPaymentAmount] 결제 조회 요청: " + url);
+
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+            System.out.println("✅ [getPaymentAmount] 응답 코드: " + response.getStatusCode());
+            System.out.println("✅ [getPaymentAmount] 응답 데이터: " + response.getBody());
+
+            JSONObject jsonResponse = new JSONObject(response.getBody());
+            if (jsonResponse.getInt("code") != 0) {
+                System.out.println("❌ [getPaymentAmount] 결제 정보 조회 실패! 응답 코드: " + jsonResponse.getInt("code"));
+                return null;
+            }
+
+            // ✅ 결제 금액 가져오기
+            Integer amount = jsonResponse.getJSONObject("response").getInt("amount");
+            System.out.println("✅ [getPaymentAmount] 결제 금액 조회 성공: " + amount);
+            return amount;
+
+        } catch (Exception e) {
+            System.out.println("❌ [getPaymentAmount] 예외 발생: " + e.getMessage());
+            return null;
+        }
+    }
+
+
+
+
+    /**
+     * 결제 취소 API
      */
     public boolean cancelPayment(String impUid, String reason) {
         if (reason == null || reason.isBlank()) {
-            reason = "결제 검증 실패로 인한 자동 환불"; // 기본 사유 설정
+            reason = "결제 후 미사용 1시간이 지나 환불"; // 기본 사유 설정
         }
 
         try {
@@ -110,12 +152,29 @@ public class PaymentService {
             requestBody.put("reason", reason);
 
             HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+
+            System.out.println("🔍 [cancelPayment] 결제 취소 요청: " + url);
+            System.out.println("🔍 [cancelPayment] 요청 데이터: " + requestBody);
+
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
+            System.out.println("✅ [cancelPayment] 응답 코드: " + response.getStatusCode());
+            System.out.println("✅ [cancelPayment] 응답 데이터: " + response.getBody());
+
             JSONObject jsonResponse = new JSONObject(response.getBody());
-            return jsonResponse.getInt("code") == 0; // 성공 여부 확인
+            boolean success = jsonResponse.getInt("code") == 0;
+
+            if (success) {
+                System.out.println("✅ [cancelPayment] 결제 취소 성공!");
+            } else {
+                System.out.println("❌ [cancelPayment] 결제 취소 실패! 응답 코드: " + jsonResponse.getInt("code"));
+            }
+
+            return success;
         } catch (Exception e) {
+            System.out.println("❌ [cancelPayment] 예외 발생: " + e.getMessage());
             return false;
         }
     }
+
 }

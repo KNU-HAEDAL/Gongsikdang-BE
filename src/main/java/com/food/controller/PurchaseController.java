@@ -2,7 +2,9 @@ package com.food.controller;
 
 import com.food.dto.PurchaseDTO;
 import com.food.service.PaymentService;
+import com.food.service.PointService;
 import com.food.service.PurchaseService;
+import com.food.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -10,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,8 @@ public class PurchaseController {
     private PurchaseService purchaseService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private PointService pointService;
 
     /**
      * JWT 기반 구매 내역 조회 API
@@ -151,18 +156,35 @@ public class PurchaseController {
     /**
      * 결제 취소 API (사용자가 직접 결제 취소)
      */
-    @Operation(summary = "결제 취소", description = "사용자가 결제를 취소할 수 있습니다. -> 자동결제취소가 안될경우(네트워크 문제같은) 사용자가 직접 결제를 취소할 수 있어야 합니다")
+    @Operation(summary = "결제 금액을 가져오고 결제내역을 삭제", description = "결제 금액을 가져오고 db에 있던 결제내역을 삭제합니다")
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @PostMapping("/purchases/cancel")
-    public ResponseEntity<?> cancelPayment(@RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<?> cancelPayment(
+            @AuthenticationPrincipal String userId,
+            @RequestBody Map<String, String> requestBody
+    ) {
         String impUid = requestBody.get("imp_uid");
         String reason = requestBody.get("reason");
 
+        // ✅ 결제 금액 조회
+        Integer refundAmount = paymentService.getPaymentAmount(impUid);
+        if (refundAmount == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("결제 정보를 찾을 수 없습니다.");
+        }
+
+        // ✅ 결제 취소 요청
         boolean isCancelled = paymentService.cancelPayment(impUid, reason);
-        if (isCancelled) {
-            return ResponseEntity.ok("결제 취소 성공");
-        } else {
+        if (!isCancelled) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("결제 취소 실패");
+        }
+
+        // ✅ 포인트 적립 (취소 성공 시)
+        try {
+            // 🔒 포인트 저장 (impUid 검증 및 트랜잭션 처리)
+            pointService.savePoint(userId, refundAmount, impUid);
+            return ResponseEntity.ok("포인트 충전 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("포인트 충전 실패: " + e.getMessage());
         }
     }
 }

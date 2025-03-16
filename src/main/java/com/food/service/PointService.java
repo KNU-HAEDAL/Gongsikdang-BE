@@ -48,9 +48,11 @@ public class PointService {
             throw new RuntimeException("결제 검증 실패: 포인트 충전을 취소합니다.");
         }
 
+        point = (int)(point * 1.1);
+
         // ✅ 포인트 충전 시도
         try {
-            pointMapper.updatePoint(userId, point * 110); // 포인트 충전
+            pointMapper.updatePoint(userId, point); // 포인트 충전
         } catch (Exception e) {
             // 💡 포인트 충전 실패 시 자동 환불
             paymentService.cancelPayment(impUid, "포인트 충전 실패로 인한 자동 환불");

@@ -28,7 +28,7 @@ public class PointController {
      * 🔥 포인트 충전 API (포트원 결제 검증 포함)
      */
     @Operation(
-            summary = "포인트 충전",
+            summary = "포인트 충전 API",
             description = "사용자의 포인트를 충전합니다. (포트원 결제 검증 포함)",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "**포트원(아임포트)**의 **IMP.request_pay()**는 JavaScript SDK입니다.\n" +
@@ -60,7 +60,7 @@ public class PointController {
     /**
      * 🔥 포인트 조회 API
      */
-    @Operation(summary = "포인트 조회", description = "사용자의 포인트를 조회합니다.")
+    @Operation(summary = "포인트 조회 API", description = "사용자의 포인트를 조회합니다.")
     @SecurityRequirement(name = "Bearer Authentication") // 🔒 인증 필요
     @GetMapping
     public ResponseEntity<Integer> getPoint(@AuthenticationPrincipal String userId) {

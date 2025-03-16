@@ -23,6 +23,9 @@ public class PurchaseDTO {
     private Integer totalAmount; // 총 결제 금액
     private String paymentMethod; // 결제 방식
     private String status; // 주문 상태
+
+    private Integer usedPoints; // 사용한 포인트
+
     private List<ItemDTO> items; // 구매한 상품 리스트
 }
 

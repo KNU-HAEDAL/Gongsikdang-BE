@@ -57,4 +57,25 @@ public class PointService {
             throw new RuntimeException("포인트 충전 중 오류 발생. 결제를 취소합니다.");
         }
     }
+
+    public void usePoint(String userId, int point){
+        UserDTO user = userMapper.findByUsername(userId);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // ✅ 사용자의 현재 포인트 조회
+        int currentPoint = pointMapper.getUserPoint(userId);
+        if (currentPoint < point) {
+            throw new RuntimeException("포인트 부족: 사용 가능한 포인트보다 큰 금액을 사용할 수 없습니다.");
+        }
+
+        // ✅ 포인트 차감
+        try {
+            pointMapper.deductPoint(userId, point);
+            System.out.println("✅ 포인트 사용 완료. 남은 포인트: " + (currentPoint - point));
+        } catch (Exception e) {
+            throw new RuntimeException("포인트 차감 중 오류 발생.");
+        }
+    }
 }

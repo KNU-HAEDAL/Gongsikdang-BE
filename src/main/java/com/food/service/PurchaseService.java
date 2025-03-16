@@ -18,6 +18,9 @@ public class PurchaseService {
     @Autowired
     private PaymentService paymentService; // ✅ 변경: PaymentService를 사용
 
+    @Autowired
+    private PointService pointService;
+
 
     /**
      * JWT 토큰 기반으로 사용자의 구매 내역 조회
@@ -35,6 +38,13 @@ public class PurchaseService {
         purchaseDTO.setUserId(userId);
 
         try {
+            // ✅ 포인트 사용한 경우 차감
+            if (purchaseDTO.getUsedPoints() != null && purchaseDTO.getUsedPoints() > 0) {
+                pointService.usePoint(userId, purchaseDTO.getUsedPoints()); // ✅ 포인트 차감
+                System.out.println("✅ 포인트 차감 완료: " + purchaseDTO.getUsedPoints());
+            }
+
+
             purchaseMapper.insertPurchase(purchaseDTO);
             System.out.println("✅ 구매 내역 저장 완료: " + purchaseDTO);
 

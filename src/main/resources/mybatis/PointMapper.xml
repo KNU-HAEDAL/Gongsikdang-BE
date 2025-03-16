@@ -13,4 +13,11 @@
         SET point = point + #{point}
         WHERE id = #{userId}
     </update>
+
+    <!-- 포인트 차감 -->
+    <update id="deductPoint">
+        UPDATE users
+        SET point = point - #{point}
+        WHERE id = #{userId} AND point >= #{point}  <!-- 포인트 부족 방지 -->
+    </update>
 </mapper>

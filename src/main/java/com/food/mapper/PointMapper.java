@@ -9,4 +9,6 @@ public interface PointMapper {
 
     //포인트 저장 함수
     void updatePoint(String userId, int point);
+
+    void deductPoint(String userId, int point);
 }

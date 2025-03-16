@@ -99,6 +99,7 @@ public class PurchaseController {
                                             "  \"totalAmount\": 20000,\n" +
                                             "  \"paymentMethod\": \"pay\",\n" +
                                             "  \"pgProvider\": \"kakao\",\n" +
+                                            "  \"usedPoints\": 5000, \n" +
                                             "  \"items\": [\n" +
                                             "    {\n" +
                                             "      \"foodId\": 1,\n" +

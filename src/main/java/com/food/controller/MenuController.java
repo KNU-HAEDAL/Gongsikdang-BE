@@ -2,10 +2,7 @@ package com.food.controller;
 
 import com.food.dto.MenuDTO;
 import com.food.service.MenuService;
-import com.food.config.jwt.token.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -92,6 +89,8 @@ public class MenuController {
                 return ResponseEntity.status(401).body("Can Not Find Token");
             }
 
+            System.out.println("재고 감소 처리 시작");
+
             // 재고 감소 처리
             for (Map<String, Object> item : cart) {
                 int foodId = (int) item.get("foodId");
@@ -103,7 +102,7 @@ public class MenuController {
                     return ResponseEntity.status(400).body("재고 부족: " + foodId);
                 }
             }
-
+            System.out.println("재고 감소 처리 완료");
             return ResponseEntity.ok("모든 재고 감소 완료");
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid Token");

@@ -42,6 +42,12 @@ public class PointService {
             throw new RuntimeException("User not found");
         }
 
+        // ✅ 포트원 결제 검증 수행
+        boolean isValidPayment = paymentService.verifyPayment(impUid, point);
+        if (!isValidPayment) {
+            throw new RuntimeException("결제 검증 실패: 포인트 충전을 취소합니다.");
+        }
+
         // ✅ 포인트 충전 시도
         try {
             pointMapper.updatePoint(userId, point); // 포인트 충전

@@ -31,11 +31,17 @@ public class PointController {
             summary = "포인트 충전 API",
             description = "사용자의 포인트를 충전합니다. (포트원 결제 검증 포함)",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "**포트원(아임포트)**의 **IMP.request_pay()**는 JavaScript SDK입니다.\n" +
-                            "프론트에서 결제 성공 후, `imp_uid`와 `merchant_uid`를 함께 백엔드로 전달해야 합니다.",
+                    description = "**사용자의 포인트를 충전합니다.**\n\n" +
+                            "✅ **포트원 결제 후, `impUid`와 `money`를 백엔드로 전달해야 합니다.**\n" +
+                            "✅ `impUid`는 포트원에서 발급하는 결제 고유번호입니다.\n" +
+                            "✅ `money`는 충전할 포인트 금액입니다.\n\n" +
+                            "**🚨 중요:**\n" +
+                            "- 결제 api를 호출한후 response에서 impUid와 money라는 이름으로 두 정보를 보내주시면 됩니다.\n" +
+                            "- `impUid` 검증이 실패하면 자동 환불됩니다.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{ \"impUid\": \"imp_1234567890\", \"money\": 10000 }")
+                            schema = @Schema(example = "{ \"impUid\": \"imp_1234567890\", \"money\": 10000 }"
+                            )
                     )
             )
     )

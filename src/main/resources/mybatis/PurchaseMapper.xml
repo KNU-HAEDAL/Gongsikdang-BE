@@ -14,6 +14,7 @@
             p.totalAmount,
             p.paymentMethod,
             p.status,
+            i.foodId AS item_foodId,
             i.foodName AS item_foodName,
             i.quantity AS item_quantity,
             i.price AS item_price
@@ -33,6 +34,7 @@
         <result property="paymentMethod" column="paymentMethod"/>
         <result property="status" column="status"/>
         <collection property="items" ofType="com.food.dto.ItemDTO">
+            <result property="foodId" column="item_foodId"/>
             <result property="foodName" column="item_foodName"/>
             <result property="quantity" column="item_quantity"/>
             <result property="price" column="item_price"/>

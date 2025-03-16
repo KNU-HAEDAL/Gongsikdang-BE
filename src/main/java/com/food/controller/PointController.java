@@ -52,7 +52,7 @@ public class PointController {
             @RequestBody Map<String, Object> requestBody
     ) {
         try {
-            int money = ((int) requestBody.get("money")) * 110;
+            int money = (int) requestBody.get("money");
             String impUid = (String) requestBody.get("impUid"); // ✅ 프론트에서 `impUid`를 직접 받음
 
             // 🔒 포인트 저장 (impUid 검증 및 트랜잭션 처리)

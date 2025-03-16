@@ -50,7 +50,7 @@ public class PointService {
 
         // ✅ 포인트 충전 시도
         try {
-            pointMapper.updatePoint(userId, point); // 포인트 충전
+            pointMapper.updatePoint(userId, point * 110); // 포인트 충전
         } catch (Exception e) {
             // 💡 포인트 충전 실패 시 자동 환불
             paymentService.cancelPayment(impUid, "포인트 충전 실패로 인한 자동 환불");

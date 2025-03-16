@@ -48,7 +48,9 @@ public class PointService {
             throw new RuntimeException("결제 검증 실패: 포인트 충전을 취소합니다.");
         }
 
-        point = (int)(point * 1.1);
+        // ✅ 포인트 10% 추가 지급 (소수점 반올림 적용)
+        point = (int) Math.round(point * 1.1);
+        System.out.println("✅ 포인트 충전: " + point + " (10% 추가 지급)");
 
         // ✅ 포인트 충전 시도
         try {

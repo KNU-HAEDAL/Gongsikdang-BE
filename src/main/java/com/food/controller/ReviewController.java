@@ -65,6 +65,8 @@ public class ReviewController {
             @AuthenticationPrincipal String userId,
             @RequestBody Map<String, Object> requestBody
     ) {
+        System.out.println("리뷰 작성 시작!!!");
+
         // Request Body에서 값 추출
         int foodId = (int) requestBody.get("foodId");
         String reviewContent = (String) requestBody.get("reviewContent");
@@ -79,6 +81,8 @@ public class ReviewController {
 
         // 리뷰 저장 로직 호출
         reviewService.insertReview(reviewDTO);
+
+        System.out.println("리뷰 작성 완료!!!");
 
         // 성공 응답 반환
         return ResponseEntity.ok("리뷰 작성 성공");

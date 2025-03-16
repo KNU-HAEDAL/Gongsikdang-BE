@@ -49,7 +49,11 @@ public class PointService {
         }
 
         // ✅ 포인트 10% 추가 지급 (소수점 반올림 적용)
-        point = (int) Math.round(point * 1.1);
+        if (point == 50000){
+            point = (int) Math.round(point * 1.05);
+        } else{
+            point = (int) Math.round(point * 1.1);
+        }
         System.out.println("✅ 포인트 충전: " + point + " (10% 추가 지급)");
 
         // ✅ 포인트 충전 시도

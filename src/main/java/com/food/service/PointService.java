@@ -65,8 +65,11 @@ public class PointService {
         }
 
         // ✅ 사용자의 현재 포인트 조회
-        int currentPoint = pointMapper.getUserPoint(userId);
+        int currentPoint = user.getPoint();
+        System.out.println("현재포인트 : " + currentPoint);
+        System.out.println("차감된포인트 : " + point);
         if (currentPoint < point) {
+            System.out.println("✅ 포인트 부족.");
             throw new RuntimeException("포인트 부족: 사용 가능한 포인트보다 큰 금액을 사용할 수 없습니다.");
         }
 
@@ -75,6 +78,7 @@ public class PointService {
             pointMapper.deductPoint(userId, point);
             System.out.println("✅ 포인트 사용 완료. 남은 포인트: " + (currentPoint - point));
         } catch (Exception e) {
+            System.out.println("✅ 포인트 사용 실패.");
             throw new RuntimeException("포인트 차감 중 오류 발생.");
         }
     }

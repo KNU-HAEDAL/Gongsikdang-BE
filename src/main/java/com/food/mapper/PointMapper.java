@@ -1,14 +1,14 @@
 package com.food.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface PointMapper {
 
     int getUserPoint(String userId);
 
-    //포인트 저장 함수
-    void updatePoint(String userId, int point);
+    void updatePoint(@Param("userId") String userId, @Param("point") int point); // 포인트 충전
 
-    void deductPoint(String userId, int point);
+    void deductPoint(@Param("userId") String userId, @Param("point") int point); // 포인트 차감
 }

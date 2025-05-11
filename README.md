@@ -7,6 +7,8 @@ React 기반 프론트와 협업하여 예약/결제 시스템을 구현하였�
 - Java, Spring Boot, MySQL, JWT, Maven, Swagger
 - Dockerfile 기반 컨테이너화 → Railway 배포
 
+![image](https://github.com/user-attachments/assets/2d125323-6c5d-4464-8224-ed8b7fb95ff8)
+
 ## 핵심 기능
 - 메뉴 조회 / 예약 생성
 - 포트원 결제 (QR 방식) / 24시간 예약 만료 처리
